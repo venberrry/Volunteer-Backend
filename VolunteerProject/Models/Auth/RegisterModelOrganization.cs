@@ -9,6 +9,7 @@ public class RegisterModelOrganization
     public string Email { get; set; }
     
     [Required]
+    [MaxLength(100)]
     public string Title { get; set; }
     
     [Required]
