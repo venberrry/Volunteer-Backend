@@ -16,5 +16,8 @@ public class JoinRequest
     public int OranizationId { get; set; }
     public Organization Organization { get; set; }
     
+    [MaxLength(2000)]
+    public string CoverLetter  { get; set; }
+    
     public bool IsApproved { get; set; }
 }

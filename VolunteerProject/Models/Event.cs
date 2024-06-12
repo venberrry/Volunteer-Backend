@@ -14,7 +14,7 @@ public class Event
     
     [Required]
     [MaxLength(2000)]
-    public string? Description  { get; set; }
+    public string Description  { get; set; }
     
     [Required]
     public DateTime Date { get; set; }
