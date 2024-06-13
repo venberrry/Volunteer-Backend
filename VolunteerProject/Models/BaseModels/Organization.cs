@@ -1,26 +1,45 @@
 ﻿namespace VolunteerProject.Models;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Identity;
 
 // Модель организации
-public class Organization
+public class Organization : IdentityUser<int>
 {
     [Key]
-    public int Id { get; set; }
-    
+    public int IdO { get; set; }
+
     [Required]
-    [MaxLength(150)]
-    public string Title { get; set; }
-    
+    [MaxLength(200)]
+    public string Name { get; set; }
+
     [Required]
-    public string Password { get; set; }
-    
+    [EmailAddress]
+    public string ContactEmail { get; set; }
+
+    public string? PhotoPath { get; set; }
+
     [Required]
-    public OrganizationType Type { get; set; }
-    
+    [MaxLength(500)]
+    public string LegalAddress { get; set; }
+
+    public string? Website { get; set; }
+
+    [Required]
+    [MaxLength(15)]
+    public string PhoneNumber { get; set; }
+
+    [Required]
+    [MaxLength(100)]
+    public string WorkingHours { get; set; }
+
     public ICollection<Event> Events { get; set; }
-    public ICollection<JoinRequest> JoinRequests { get; set; }
-    public ICollection<OrganizationMembership> Memberships { get; set; }
+    public ICollection<Subscription> Subscriptions { get; set; }
+    
+    [ForeignKey("User")]
+    public int UserId { get; set; }
+    public User User { get; set; }
 }
 public enum OrganizationType
 {
