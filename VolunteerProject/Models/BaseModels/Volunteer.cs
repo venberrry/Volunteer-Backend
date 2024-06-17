@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 // Модель пользователя
-public class Volunteer : IdentityUser<int>
+public class Volunteer : User
 {
-    [Key]
-    public int IdV { get; set; }
+    //[Key]
+    //public int IdV { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -23,7 +23,7 @@ public class Volunteer : IdentityUser<int>
 
     [Required]
     [EmailAddress]
-    public string Email { get; set; }
+    public override string Email { get; set; }
 
     public string? PhotoPath { get; set; }
 
@@ -36,13 +36,11 @@ public class Volunteer : IdentityUser<int>
 
     public string? About { get; set; }
 
-    public int ParticipationCount { get; set; }
+    public int? ParticipationCount { get; set; }
+
+    //public string Role { get; set; }
 
     public ICollection<Application> Applications { get; set; }
     public ICollection<Subscription> Subscriptions { get; set; }
     
-    [ForeignKey("User")]
-    public int UserId { get; set; }
-    public User User { get; set; }
-
 }

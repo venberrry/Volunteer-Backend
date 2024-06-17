@@ -34,6 +34,6 @@ public class RegisterModelVolunteer
 
     public string? About { get; set; }
         
-    [Required]
-    public string Role { get; set; }
+    //[Required]
+    //public string Role { get; set; }
 }

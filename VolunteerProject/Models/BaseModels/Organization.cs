@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
 
 // Модель организации
-public class Organization : IdentityUser<int>
+public class Organization : User
 {
-    [Key]
-    public int IdO { get; set; }
+    //[Key]
+    //public int IdO { get; set; }
 
     [Required]
     [MaxLength(200)]
@@ -26,20 +26,20 @@ public class Organization : IdentityUser<int>
 
     public string? Website { get; set; }
 
-    [Required]
-    [MaxLength(15)]
-    public string PhoneNumber { get; set; }
+    //[Required]
+    //[MaxLength(15)]
+    //public string PhoneNumber { get; set; }
 
-    [Required]
+    //[Required]
     [MaxLength(100)]
     public string WorkingHours { get; set; }
 
     public ICollection<Event> Events { get; set; }
     public ICollection<Subscription> Subscriptions { get; set; }
     
-    [ForeignKey("User")]
-    public int UserId { get; set; }
-    public User User { get; set; }
+    //[ForeignKey("User")]
+    //public int UserId { get; set; }
+   // public User User { get; set; }
 }
 public enum OrganizationType
 {
