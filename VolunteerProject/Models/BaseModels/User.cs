@@ -1,28 +1,8 @@
-﻿namespace VolunteerProject.Models;
-
-using System.ComponentModel.DataAnnotations;
-
-// Модель пользователя
-public class User
+namespace VolunteerProject.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
+public class User : IdentityUser<int>
 {
-    [Key]
-    public int Id { get; set; } 
-    
-    [Required]
-    [MaxLength(30)]
-    public string Name { get; set; }
-    
-    [Required]
-    [MaxLength(30)]
-    public string Surname { get; set; }
-    
-    [Required]
-    [EmailAddress]
-    public string Email { get; set; }
-    
-    [Required]
-    public string Password { get; set; }
-    
-    public ICollection<OrganizationMembership> OrganizationMemberships { get; set; }
-    public ICollection<EventParticipants> EventParticipants { get; set; }
+    public ICollection<Volunteer> Volunteers { get; set; }
+    public ICollection<Organization> Organizations { get; set; }
 }
