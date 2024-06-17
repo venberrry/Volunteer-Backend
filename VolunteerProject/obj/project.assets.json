@@ -3934,19 +3934,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\joyse\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
       "projectName": "VolunteerProject",
-      "projectPath": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
-      "packagesPath": "C:\\Users\\joyse\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\obj\\",
+      "projectPath": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\joyse\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3954,6 +3959,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4022,7 +4028,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300-preview.24203.14/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
