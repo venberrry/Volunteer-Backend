@@ -46,9 +46,10 @@ namespace VolunteerProject.DataBase
                 .HasForeignKey(s => s.OrganizationId);
 
             modelBuilder.Entity<Event>()
-                .HasMany(e => e.Applications)
-                .WithOne(a => a.Event)
-                .HasForeignKey(a => a.EventId);
+                .HasOne(e => e.Organization)
+                .WithMany(o => o.Events)
+                .HasForeignKey(e => e.OrganizationId)
+                .IsRequired();
         }
     }
 }

@@ -8,7 +8,7 @@ public class Event
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdE { get; set; }
+    public int Id { get; set; }
     
     [Required]
     public int OrganizationId { get; set; }

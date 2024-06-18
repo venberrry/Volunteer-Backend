@@ -1,3 +1,6 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+
 namespace VolunteerProject.Controllers.Events;
 using Microsoft.AspNetCore.Mvc;
 using VolunteerProject.Models;
@@ -5,8 +8,9 @@ using VolunteerProject.Services.Events;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-[Route("api")]
+[Authorize]
 [ApiController]
+[Route("api")]
 public class EventsController : ControllerBase
 {
     private readonly IEventService _eventService;
@@ -35,28 +39,30 @@ public class EventsController : ControllerBase
     }
 
     [HttpPost("CreateEvent")]
-    public async Task<ActionResult> CreateEvent([FromBody] CreateEventModel eventModel)
+    public async Task<IActionResult> CreateEvent([FromBody] CreateEventModel eventModel)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
 
-        // Создание объекта Event на основе данных из eventModel
-        var newEvent = new Event
+        // Получение идентификатора текущего пользователя
+        var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        // Создание объекта мероприятия с использованием идентификатора пользователя
+        var eventObj = new Event
         {
-            OrganizationId = eventModel.OrganizationId,
             Title = eventModel.Title,
             StartDate = eventModel.StartDate,
             EndDate = eventModel.EndDate,
             City = eventModel.City,
-            Description = eventModel.Description
-        
+            Description = eventModel.Description,
+            OrganizationId = userId // Установка OrganizationId как идентификатор текущего пользователя
         };
-        
-        var createdEvent = await _eventService.CreateEventAsync(newEvent);
 
-        return Ok(createdEvent);
+        var createdEvent = await _eventService.CreateEventAsync(eventObj);
+
+        return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
     }
 
     [HttpPut("UpdateEvent{id}")]

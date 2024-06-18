@@ -2,9 +2,6 @@ using System.ComponentModel.DataAnnotations;
 public class CreateEventModel
 {
     [Required]
-    public int OrganizationId { get; set; }
-
-    [Required]
     [MaxLength(100)]
     public string Title { get; set; }
 
