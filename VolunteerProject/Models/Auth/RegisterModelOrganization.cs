@@ -23,10 +23,7 @@ public class RegisterModelOrganization
     [Required]
     [MaxLength(500)]
     public string LegalAddress { get; set; }
-
-    [Required]
-    public string Role { get; set; }
-
+    
     public string? PhotoPath { get; set; }
 
     public string? Website { get; set; }

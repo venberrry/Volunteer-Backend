@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Identity;
 // Модель организации
 public class Organization : User
 {
-    //[Key]
-    //public int IdO { get; set; }
 
     [Required]
     [MaxLength(200)]
@@ -37,9 +35,6 @@ public class Organization : User
     public ICollection<Event> Events { get; set; }
     public ICollection<Subscription> Subscriptions { get; set; }
     
-    //[ForeignKey("User")]
-    //public int UserId { get; set; }
-   // public User User { get; set; }
 }
 public enum OrganizationType
 {

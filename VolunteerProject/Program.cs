@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using VolunteerProject.DataBase;
 using VolunteerProject.Models;
 using VolunteerProject.Services;
+using VolunteerProject.Services.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +22,10 @@ builder.Services.AddIdentityCore<Volunteer>()
     .AddRoles<IdentityRole<int>>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
 builder.Services.AddScoped<UserManager<Volunteer>>();
 builder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 // Регистрация UserManager и RoleManager для Organization
 builder.Services.AddIdentityCore<Organization>()
