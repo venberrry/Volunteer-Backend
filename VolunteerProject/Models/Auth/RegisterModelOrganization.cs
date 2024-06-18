@@ -24,11 +24,4 @@ public class RegisterModelOrganization
     [MaxLength(500)]
     public string LegalAddress { get; set; }
     
-    public string? PhotoPath { get; set; }
-
-    public string? Website { get; set; }
-
-    [Required]
-    [MaxLength(100)]
-    public string WorkingHours { get; set; }
 }

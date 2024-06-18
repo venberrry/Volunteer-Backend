@@ -35,9 +35,7 @@ namespace VolunteerProject.Services
                 Email = model.Email,
                 UserName = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                BirthDate = model.BirthDate,
-                PhotoPath = model.PhotoPath,
-                About = model.About
+                BirthDate = model.BirthDate
             };
 
             var result = await _volunteerManager.CreateAsync(volunteer, model.Password);
@@ -59,10 +57,7 @@ namespace VolunteerProject.Services
                 ContactEmail = model.Email,
                 LegalAddress = model.LegalAddress,
                 PhoneNumber = model.PhoneNumber,
-                UserName = model.Email,
-                PhotoPath = model.PhotoPath,
-                Website = model.Website,
-                WorkingHours = model.WorkingHours
+                UserName = model.Email
             };
 
             var result = await _organizationManager.CreateAsync(organization, model.Password);

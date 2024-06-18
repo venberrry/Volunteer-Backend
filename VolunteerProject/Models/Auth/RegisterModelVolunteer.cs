@@ -30,10 +30,4 @@ public class RegisterModelVolunteer
     [Required]
     public DateTime BirthDate { get; set; }
 
-    public string? PhotoPath { get; set; }
-
-    public string? About { get; set; }
-        
-    //[Required]
-    //public string Role { get; set; }
 }
