@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using VolunteerProject.Models;
 using VolunteerProject.Models.Auth;
 using VolunteerProject.Services;
 
 [ApiController]
+[EnableCors("AllowSpecificOrigin")]
 [Route("api")]
 public class AccountController : ControllerBase
 {

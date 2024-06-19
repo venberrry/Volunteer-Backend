@@ -43,6 +43,19 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
+// Добавление CORS политики
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policyBuilder =>
+        {
+            policyBuilder.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
+});
+
 // Добавление Swagger
 builder.Services.AddSwaggerGen(c =>
 {
@@ -93,6 +106,7 @@ using (var scope = app.Services.CreateScope())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors("AllowSpecificOrigin"); // Обратите внимание, что политика называется "AllowSpecificOrigin"
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -101,5 +115,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
-
 app.Run();

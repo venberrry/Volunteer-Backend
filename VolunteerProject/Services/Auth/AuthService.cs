@@ -35,7 +35,7 @@ namespace VolunteerProject.Services
                 Email = model.Email,
                 UserName = model.Email,
                 PhoneNumber = model.PhoneNumber,
-                BirthDate = model.BirthDate
+                BirthDate = DateTime.SpecifyKind(model.BirthDate, DateTimeKind.Utc),
             };
 
             var result = await _volunteerManager.CreateAsync(volunteer, model.Password);
