@@ -72,7 +72,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Volunteer API v1");
-        c.RoutePrefix = string.Empty; // Swagger UI будет доступен на корневом URL (например, http://localhost:<port>/)
+        //c.RoutePrefix = string.Empty; // Swagger UI будет доступен на корневом URL (например, http://localhost:<port>/)
     });
 }
 else
@@ -83,7 +83,7 @@ else
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Volunteer API v1");
-        c.RoutePrefix = string.Empty; // Swagger UI будет доступен на корневом URL (например, http://localhost:<port>/)
+        //c.RoutePrefix = string.Empty; // Swagger UI будет доступен на корневом URL (например, http://localhost:<port>/)
     });
 }
 
