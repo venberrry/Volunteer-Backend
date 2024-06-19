@@ -77,7 +77,7 @@ public class AccountController : ControllerBase
 
         if (result.Success)
         {
-            return Ok(new { Message = "Login successful" });
+            return Ok(new { Message = $"Login successful. Token: {result.Token}"  });
         }
 
         foreach (var error in result.Errors)

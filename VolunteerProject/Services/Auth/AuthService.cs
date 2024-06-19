@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using VolunteerProject.Models;
 using VolunteerProject.Models.Auth;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace VolunteerProject.Services
 {
@@ -18,12 +22,14 @@ namespace VolunteerProject.Services
         private readonly UserManager<Volunteer> _volunteerManager;
         private readonly UserManager<Organization> _organizationManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(UserManager<Volunteer> volunteerManager, UserManager<Organization> organizationManager, SignInManager<User> signInManager)
+        public AuthService(UserManager<Volunteer> volunteerManager, UserManager<Organization> organizationManager, SignInManager<User> signInManager, IConfiguration configuration)
         {
             _volunteerManager = volunteerManager;
             _organizationManager = organizationManager;
             _signInManager = signInManager;
+            _configuration = configuration;
         }
 
         public async Task<AuthResult> RegisterVolunteerAsync(RegisterModelVolunteer model)
@@ -46,7 +52,9 @@ namespace VolunteerProject.Services
             }
 
             await _volunteerManager.AddToRoleAsync(volunteer, "Volunteer");
-            return new AuthResult { Success = true };
+            var token = GenerateJwtToken(volunteer);
+            
+            return new AuthResult { Success = true, Token = token };
         }
 
         public async Task<AuthResult> RegisterOrganizationAsync(RegisterModelOrganization model)
@@ -68,19 +76,52 @@ namespace VolunteerProject.Services
             }
 
             await _organizationManager.AddToRoleAsync(organization, "Organization");
-            return new AuthResult { Success = true };
+            var token = GenerateJwtToken(organization);
+            
+            return new AuthResult { Success = true, Token = token };
         }
         
         public async Task<AuthResult> LoginAsync(LoginModel model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            var user = await _signInManager.UserManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return new AuthResult { Success = false, Errors = new List<string> { "User does not exist." } };
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
 
             if (!result.Succeeded)
             {
                 return new AuthResult { Success = false, Errors = new List<string> { "Invalid login attempt." } };
             }
-            return new AuthResult { Success = true };
-        }
 
+            var token = GenerateJwtToken(user);
+
+            return new AuthResult { Success = true, Token = token };
+        }
+        
+        private string GenerateJwtToken(User user)
+        {
+            if (user == null) throw new ArgumentNullException(nameof(user));
+            if (string.IsNullOrEmpty(user.Id.ToString())) throw new ArgumentNullException(nameof(user.Id));
+            if (string.IsNullOrEmpty(user.UserName)) throw new ArgumentNullException(nameof(user.UserName));
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim("role", user is Volunteer ? "Volunteer" : "Organization")
+                }),
+                Expires = DateTime.UtcNow.AddHours(1), // Время действия токена
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
     }
 }

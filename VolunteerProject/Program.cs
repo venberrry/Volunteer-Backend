@@ -5,6 +5,9 @@ using VolunteerProject.DataBase;
 using VolunteerProject.Models;
 using VolunteerProject.Services;
 using VolunteerProject.Services.Events;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +42,27 @@ builder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
 // Регистрация AuthService
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+// Настройка JWT аутентификации
+var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
 // Добавление служб
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -56,10 +80,31 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Добавление Swagger
+// Добавление Swagger с поддержкой JWT
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Volunteer API", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    {
+        new OpenApiSecurityScheme
+        {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        },
+        new string[] { }
+    }});
 });
 
 var app = builder.Build();
@@ -72,18 +117,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Volunteer API v1");
-        //c.RoutePrefix = string.Empty; // Swagger UI будет доступен на корневом URL (например, http://localhost:<port>/)
     });
 }
 else
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
-    app.UseSwagger(); // Добавьте это для использования Swagger в production
+    app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Volunteer API v1");
-        //c.RoutePrefix = string.Empty; // Swagger UI будет доступен на корневом URL (например, http://localhost:<port>/)
     });
 }
 
