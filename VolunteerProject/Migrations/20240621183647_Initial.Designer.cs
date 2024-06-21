@@ -12,8 +12,8 @@ using VolunteerProject.DataBase;
 namespace VolunteerProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240618215405_UpdateEventModel")]
-    partial class UpdateEventModel
+    [Migration("20240621183647_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -313,6 +313,29 @@ namespace VolunteerProject.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("VolunteerProject.Models.Invitation", b =>
+                {
+                    b.Property<int>("IdInv")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdInv"));
+
+                    b.Property<int>("OrganizationId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("VolunteerId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("IdInv");
+
+                    b.HasIndex("OrganizationId");
+
+                    b.HasIndex("VolunteerId");
+
+                    b.ToTable("Invitation");
+                });
+
             modelBuilder.Entity("VolunteerProject.Models.Subscription", b =>
                 {
                     b.Property<int>("IdS")
@@ -515,6 +538,25 @@ namespace VolunteerProject.Migrations
                         .IsRequired();
 
                     b.Navigation("Organization");
+                });
+
+            modelBuilder.Entity("VolunteerProject.Models.Invitation", b =>
+                {
+                    b.HasOne("VolunteerProject.Models.Organization", "Organization")
+                        .WithMany()
+                        .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VolunteerProject.Models.Volunteer", "Volunteer")
+                        .WithMany()
+                        .HasForeignKey("VolunteerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Organization");
+
+                    b.Navigation("Volunteer");
                 });
 
             modelBuilder.Entity("VolunteerProject.Models.Subscription", b =>

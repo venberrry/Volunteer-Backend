@@ -15,6 +15,7 @@ namespace VolunteerProject.DataBase
         public DbSet<Event> Events { get; set; }
         public DbSet<Application> Applications { get; set; }
         public DbSet<Subscription> Subscriptions { get; set; }
+        public DbSet<Invitation> Invitation { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -50,6 +51,7 @@ namespace VolunteerProject.DataBase
                 .WithMany(o => o.Events)
                 .HasForeignKey(e => e.OrganizationId)
                 .IsRequired();
+
         }
     }
 }
