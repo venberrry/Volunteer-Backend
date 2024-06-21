@@ -120,6 +120,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Volunteer API v1");
+        c.InjectStylesheet("/swagger-ui/dark-theme.css");
     });
 }
 else
