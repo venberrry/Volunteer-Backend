@@ -83,7 +83,7 @@ namespace VolunteerProject.Services
         
         public async Task<AuthResult> LoginAsync(LoginModel model)
         {
-            var user = await _signInManager.UserManager.FindByEmailAsync(model.Email);
+            var user = await _signInManager.UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 return new AuthResult { Success = false, Errors = new List<string> { "User does not exist." } };
