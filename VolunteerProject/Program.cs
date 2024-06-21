@@ -42,6 +42,9 @@ builder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
 // Регистрация AuthService
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+// Регистрация InvitationService
+builder.Services.AddScoped<IInvitationService, InvitationService>();
+
 // Настройка JWT аутентификации
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 
