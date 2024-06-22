@@ -77,9 +77,17 @@ public class AccountController : ControllerBase
 
         if (result.Success)
         {
+            // Сохранение токена в куки
+            Response.Cookies.Append("jwt", result.Token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict
+            });
+            
             return Ok(new { Message = $"Login successful. Token: {result.Token}"  });
         }
-
+        
         foreach (var error in result.Errors)
         {
             ModelState.AddModelError(string.Empty, error);

@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\swagger-ui\\dark-theme.css",
+      "PackagePath": "staticwebassets\\swagger-ui\\dark-theme.css"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.VolunteerProject.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.VolunteerProject.props",
+      "PackagePath": "build\\VolunteerProject.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.VolunteerProject.props",
+      "PackagePath": "buildMultiTargeting\\VolunteerProject.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.VolunteerProject.props",
+      "PackagePath": "buildTransitive\\VolunteerProject.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

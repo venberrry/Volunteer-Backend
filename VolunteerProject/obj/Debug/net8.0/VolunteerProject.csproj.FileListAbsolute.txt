@@ -466,3 +466,4 @@ C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug
 C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug\net8.0\VolunteerProject.pdb
 C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug\net8.0\VolunteerProject.genruntimeconfig.cache
 C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug\net8.0\ref\VolunteerProject.dll
+C:\Users\user\Desktop\Volunteer-Backend TRUE\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\VolunteerProject.staticwebassets.runtime.json

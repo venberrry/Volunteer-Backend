@@ -1,11 +1,39 @@
 {
   "Version": 1,
-  "Hash": "mSklS/4pnLE5rvnYK+6/w5bo6PLhL7xmOEHQmm8dHSY=",
+  "Hash": "n+CNruHlSPfCQ/IsZyq188SJy7bvtaqJybvPgM0EN+k=",
   "Source": "VolunteerProject",
   "BasePath": "_content/VolunteerProject",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "VolunteerProject\\wwwroot",
+      "Source": "VolunteerProject",
+      "ContentRoot": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\",
+      "BasePath": "_content/VolunteerProject",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\swagger-ui\\dark-theme.css",
+      "SourceId": "VolunteerProject",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\",
+      "BasePath": "_content/VolunteerProject",
+      "RelativePath": "swagger-ui/dark-theme.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\swagger-ui\\dark-theme.css"
+    }
+  ]
 }
