@@ -8,7 +8,7 @@ using VolunteerProject.Services.Events;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-[Authorize]
+
 [ApiController]
 [Route("api")]
 public class EventsController : ControllerBase
@@ -19,14 +19,14 @@ public class EventsController : ControllerBase
     {
         _eventService = eventService;
     }
-
+    
     [HttpGet("GetAllEvents")]
     public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
     {
         var events = await _eventService.GetAllEventsAsync();
         return Ok(events);
     }
-
+    
     [HttpGet("GetById{id}")]
     public async Task<ActionResult<Event>> GetEventById(int id)
     {
@@ -38,6 +38,7 @@ public class EventsController : ControllerBase
         return Ok(eventItem);
     }
 
+    [Authorize(Roles = "Organization")]
     [HttpPost("CreateEvent")]
     public async Task<IActionResult> CreateEvent([FromBody] CreateEventModel eventModel)
     {
@@ -65,6 +66,7 @@ public class EventsController : ControllerBase
         return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
     }
 
+    [Authorize(Roles = "Organization")]
     [HttpPut("UpdateEvent{id}")]
     public async Task<IActionResult> UpdateEvent(int id, Event updatedEvent)
     {
@@ -76,6 +78,7 @@ public class EventsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Organization")]
     [HttpDelete("Delete{id}")]
     public async Task<IActionResult> DeleteEvent(int id)
     {

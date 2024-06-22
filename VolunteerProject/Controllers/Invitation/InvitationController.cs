@@ -7,7 +7,6 @@ using VolunteerProject.Services;
 
 namespace VolunteerProject.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api")]
     public class InvitationController : ControllerBase
@@ -18,6 +17,7 @@ namespace VolunteerProject.Controllers
             _invitationService = invitationService;
         }
 
+        [Authorize(Roles = "Organization")]
         [HttpPost("CreateInvitation")]
         public async Task<IActionResult> CreateInvitation([FromBody] CreateInvitationModel invitation)
         {
@@ -35,6 +35,7 @@ namespace VolunteerProject.Controllers
             return CreatedAtAction(nameof(GetInvitationById), new { id = createdInvitation.IdInv }, createdInvitation);
         }
 
+        [Authorize(Roles = "Organization")]
         [HttpGet("GetAllInvitations")]
         public async Task<IActionResult> GetAllInvitations()
         {
@@ -42,6 +43,7 @@ namespace VolunteerProject.Controllers
             return Ok(Invitations);
         }
 
+        [Authorize(Roles = "Organization")]
         [HttpGet("GetInvitationById{id}")]
         public async Task<IActionResult> GetInvitationById(int id)
         {
@@ -49,6 +51,7 @@ namespace VolunteerProject.Controllers
             return Ok(Invitation);
         }
 
+        [Authorize(Roles = "Organization")]
         [HttpPut("UpdateInvitation{id}")]
         public async Task<IActionResult> UpdateInvitation(int id, Invitation updatedInvitation)
         {
@@ -56,6 +59,7 @@ namespace VolunteerProject.Controllers
             return Ok(Invitation);
         }
 
+        [Authorize(Roles = "Organization")]
         [HttpDelete("DeleteInvitation{id}")]
         public async Task<IActionResult> DeleteInvitation(int id)
         {
