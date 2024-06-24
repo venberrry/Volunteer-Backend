@@ -34,6 +34,7 @@ public class Organization : User
 
     public ICollection<Event> Events { get; set; }
     public ICollection<Subscription> Subscriptions { get; set; }
+    public ICollection<Invitation> Invitations { get; set; }
     
 }
 public enum OrganizationType

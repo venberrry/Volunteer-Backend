@@ -42,5 +42,6 @@ public class Volunteer : User
 
     public ICollection<Application> Applications { get; set; }
     public ICollection<Subscription> Subscriptions { get; set; }
+    public ICollection<Invitation> Invitations { get; set; }
     
 }

@@ -330,7 +330,7 @@ namespace VolunteerProject.Migrations
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("Invitation");
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("VolunteerProject.Models.Subscription", b =>
@@ -347,11 +347,6 @@ namespace VolunteerProject.Migrations
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("VolunteerId")
                         .HasColumnType("integer");
@@ -540,13 +535,13 @@ namespace VolunteerProject.Migrations
             modelBuilder.Entity("VolunteerProject.Models.Invitation", b =>
                 {
                     b.HasOne("VolunteerProject.Models.Organization", "Organization")
-                        .WithMany()
+                        .WithMany("Invitations")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("VolunteerProject.Models.Volunteer", "Volunteer")
-                        .WithMany()
+                        .WithMany("Invitations")
                         .HasForeignKey("VolunteerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -605,12 +600,16 @@ namespace VolunteerProject.Migrations
                 {
                     b.Navigation("Events");
 
+                    b.Navigation("Invitations");
+
                     b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("VolunteerProject.Models.Volunteer", b =>
                 {
                     b.Navigation("Applications");
+
+                    b.Navigation("Invitations");
 
                     b.Navigation("Subscriptions");
                 });

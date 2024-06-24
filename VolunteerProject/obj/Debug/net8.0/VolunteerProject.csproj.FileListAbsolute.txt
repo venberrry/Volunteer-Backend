@@ -467,3 +467,12 @@ C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug
 C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug\net8.0\VolunteerProject.genruntimeconfig.cache
 C:\Users\User\Desktop\VolunteerProj\Volunteer-Backend\VolunteerProject\obj\Debug\net8.0\ref\VolunteerProject.dll
 C:\Users\user\Desktop\Volunteer-Backend TRUE\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\VolunteerProject.staticwebassets.runtime.json
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\VolunteerProject.staticwebassets.runtime.json
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\VolunteerProject\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

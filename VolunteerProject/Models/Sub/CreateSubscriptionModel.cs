@@ -1,10 +1,9 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
 namespace VolunteerProject.Models;
 
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-
-public class Subscription
+public class CreateSubscriptionModel
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,11 +17,4 @@ public class Subscription
 
     [MaxLength(400)]
     public string? CoverLetter { get; set; }
-
-    [Required]
-    [MaxLength(50)]
-    public string Status { get; set; }
-
-    public Volunteer Volunteer { get; set; }
-    public Organization Organization { get; set; }
 }

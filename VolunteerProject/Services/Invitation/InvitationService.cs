@@ -24,19 +24,19 @@ namespace VolunteerProject.Services
         //Получение приглашения по id
         public async Task<Invitation> GetInvitationByIdAsync(int id)
         {
-            return await _context.Invitation.FindAsync(id);
+            return await _context.Invitations.FindAsync(id);
         }
 
         //Получение всех приглашений
         public async Task<IEnumerable<Invitation>> GetAllInvitationsAsync()
         {
-            return await _context.Invitation.ToListAsync();
+            return await _context.Invitations.ToListAsync();
         }
 
         //Создание нового приглашения
         public async Task<Invitation> CreateInvitationAsync(Invitation invitation)
         {
-            _context.Invitation.Add(invitation);
+            _context.Invitations.Add(invitation);
             await _context.SaveChangesAsync();
             return invitation;
         }
@@ -44,7 +44,7 @@ namespace VolunteerProject.Services
         //Обновление приглашения
         public async Task<Invitation> UpdateInvitationAsync(int id, Invitation updatedInvitation)
         {
-            var Invitation = await _context.Invitation.FindAsync(id);
+            var Invitation = await _context.Invitations.FindAsync(id);
 
             if (Invitation == null)
             {
@@ -60,13 +60,13 @@ namespace VolunteerProject.Services
         //Удаление приглашения
         public async Task<Invitation> DeleteInvitationAsync(int id)
         {
-            var Invitation = await _context.Invitation.FindAsync(id);
+            var Invitation = await _context.Invitations.FindAsync(id);
             if (Invitation == null)
             {
                 return null;
             }
 
-            _context.Invitation.Remove(Invitation);
+            _context.Invitations.Remove(Invitation);
             await _context.SaveChangesAsync();
             return Invitation;
         }

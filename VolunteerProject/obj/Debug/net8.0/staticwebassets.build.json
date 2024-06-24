@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "n+CNruHlSPfCQ/IsZyq188SJy7bvtaqJybvPgM0EN+k=",
+  "Hash": "gLZ1Ar2sf7hieDNeKoE2IY6wVEAj3KeoWDoPHp4BpU4=",
   "Source": "VolunteerProject",
   "BasePath": "_content/VolunteerProject",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "VolunteerProject\\wwwroot",
       "Source": "VolunteerProject",
-      "ContentRoot": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\wwwroot\\",
       "BasePath": "_content/VolunteerProject",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\swagger-ui\\dark-theme.css",
+      "Identity": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\wwwroot\\swagger-ui\\dark-theme.css",
       "SourceId": "VolunteerProject",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\user\\Desktop\\Volunteer-Backend TRUE\\Volunteer-Backend\\VolunteerProject\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\wwwroot\\",
       "BasePath": "_content/VolunteerProject",
       "RelativePath": "swagger-ui/dark-theme.css",
       "AssetKind": "All",
