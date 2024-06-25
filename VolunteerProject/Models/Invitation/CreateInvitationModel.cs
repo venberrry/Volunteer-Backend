@@ -5,6 +5,6 @@ namespace VolunteerProject.Models
     public class CreateInvitationModel
     {
         [Required]
-        public int VolunteerId { get; set; }
+        public int VolunteerId { get; init; }
     }
 }

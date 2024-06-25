@@ -8,7 +8,7 @@ namespace VolunteerProject.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdInv {  get; set; }
+        public int Id {  get; init; }
 
         [Required]
         public int OrganizationId { get; set; }

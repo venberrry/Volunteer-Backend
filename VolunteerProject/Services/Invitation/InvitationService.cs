@@ -8,9 +8,9 @@ namespace VolunteerProject.Services
     {
         Task<Invitation> CreateInvitationAsync(Invitation invitation);
         Task<Invitation> UpdateInvitationAsync(int id, Invitation updatedInvitation);
-        Task<Invitation> DeleteInvitationAsync(int id);
-        Task<IEnumerable<Invitation>> GetAllInvitationsAsync();
-        Task<Invitation> GetInvitationByIdAsync(int id);
+        Task<Invitation?> DeleteInvitationAsync(int id);
+        Task<IEnumerable<Invitation?>> GetAllInvitationsAsync();
+        Task<Invitation?> GetInvitationByIdAsync(int id);
     }
 
     public class InvitationService : IInvitationService
@@ -22,13 +22,13 @@ namespace VolunteerProject.Services
         }
 
         //Получение приглашения по id
-        public async Task<Invitation> GetInvitationByIdAsync(int id)
+        public async Task<Invitation?> GetInvitationByIdAsync(int id)
         {
             return await _context.Invitations.FindAsync(id);
         }
 
         //Получение всех приглашений
-        public async Task<IEnumerable<Invitation>> GetAllInvitationsAsync()
+        public async Task<IEnumerable<Invitation?>> GetAllInvitationsAsync()
         {
             return await _context.Invitations.ToListAsync();
         }
@@ -44,31 +44,31 @@ namespace VolunteerProject.Services
         //Обновление приглашения
         public async Task<Invitation> UpdateInvitationAsync(int id, Invitation updatedInvitation)
         {
-            var Invitation = await _context.Invitations.FindAsync(id);
+            var invitation = await _context.Invitations.FindAsync(id);
 
-            if (Invitation == null)
+            if (invitation == null)
             {
-                return null;
+                throw new Exception("Invitation not found");
             }
 
-            Invitation.VolunteerId = updatedInvitation.VolunteerId;
+            invitation.VolunteerId = updatedInvitation.VolunteerId;
 
-            _context.SaveChanges();
-            return Invitation;
+            await _context.SaveChangesAsync();
+            return invitation;
         }
 
         //Удаление приглашения
-        public async Task<Invitation> DeleteInvitationAsync(int id)
+        public async Task<Invitation?> DeleteInvitationAsync(int id)
         {
-            var Invitation = await _context.Invitations.FindAsync(id);
-            if (Invitation == null)
+            var invitation = await _context.Invitations.FindAsync(id);
+            if (invitation == null)
             {
                 return null;
             }
 
-            _context.Invitations.Remove(Invitation);
+            _context.Invitations.Remove(invitation);
             await _context.SaveChangesAsync();
-            return Invitation;
+            return invitation;
         }
     }
 }

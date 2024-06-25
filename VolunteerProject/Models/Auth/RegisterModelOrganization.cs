@@ -6,22 +6,22 @@ public class RegisterModelOrganization
 {
     [Required]
     [EmailAddress]
-    public string Email { get; set; }
+    public string? Email { get; set; }
     
     [Required]
     [MaxLength(100)]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     [Required]
     [DataType(DataType.Password)]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     [Required]
     [Phone]
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 
     [Required]
     [MaxLength(500)]
-    public string LegalAddress { get; set; }
+    public string? LegalAddress { get; set; }
     
 }

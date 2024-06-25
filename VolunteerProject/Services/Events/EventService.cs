@@ -9,7 +9,7 @@ namespace VolunteerProject.Services.Events;
 public interface IEventService
 {
     Task<IEnumerable<Event>> GetAllEventsAsync();
-    Task<Event> GetEventByIdAsync(int id);
+    Task<Event?> GetEventByIdAsync(int id);
     Task<Event> CreateEventAsync(Event eventObj);
     Task<Event> UpdateEventAsync(int id, Event updatedEvent);
     Task<bool> DeleteEventAsync(int id);
@@ -28,7 +28,7 @@ public class EventService : IEventService
         return await _context.Events.ToListAsync();
     }
 
-    public async Task<Event> GetEventByIdAsync(int id)
+    public async Task<Event?> GetEventByIdAsync(int id)
     {
         return await _context.Events.FindAsync(id);
     }

@@ -3,12 +3,12 @@ namespace VolunteerProject.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-// Модель мероприятия
+/// Модель мероприятия
 public class Application
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdReq { get; set; }
+    public int Id { get; set; }
 
     [Required]
     public int VolunteerId { get; set; }
@@ -21,7 +21,7 @@ public class Application
 
     [Required]
     [MaxLength(50)]
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

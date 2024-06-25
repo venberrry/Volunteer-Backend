@@ -32,39 +32,39 @@ namespace VolunteerProject.Controllers
 
             var createdInvitation = await _invitationService.CreateInvitationAsync(invitationObj);
 
-            return CreatedAtAction(nameof(GetInvitationById), new { id = createdInvitation.IdInv }, createdInvitation);
+            return CreatedAtAction(nameof(GetInvitationById), new { id = createdInvitation.Id }, createdInvitation);
         }
 
         [Authorize(Roles = "Organization")]
         [HttpGet("GetAllInvitations")]
         public async Task<IActionResult> GetAllInvitations()
         {
-            var Invitations = await _invitationService.GetAllInvitationsAsync();
-            return Ok(Invitations);
+            var invitations = await _invitationService.GetAllInvitationsAsync();
+            return Ok(invitations);
         }
 
         [Authorize(Roles = "Organization")]
-        [HttpGet("GetInvitationById{id}")]
+        [HttpGet("GetInvitationById/{id:int}")]
         public async Task<IActionResult> GetInvitationById(int id)
         {
-            var Invitation = await _invitationService.GetInvitationByIdAsync(id);
-            return Ok(Invitation);
+            var invitation = await _invitationService.GetInvitationByIdAsync(id);
+            return Ok(invitation);
         }
 
         [Authorize(Roles = "Organization")]
-        [HttpPut("UpdateInvitation{id}")]
+        [HttpPut("UpdateInvitation{id:int}")]
         public async Task<IActionResult> UpdateInvitation(int id, Invitation updatedInvitation)
         {
-            var Invitation = await _invitationService.UpdateInvitationAsync(id, updatedInvitation);
-            return Ok(Invitation);
+            var invitation = await _invitationService.UpdateInvitationAsync(id, updatedInvitation);
+            return Ok(invitation);
         }
 
         [Authorize(Roles = "Organization")]
-        [HttpDelete("DeleteInvitation{id}")]
+        [HttpDelete("DeleteInvitation/{id:int}")]
         public async Task<IActionResult> DeleteInvitation(int id)
         {
-            var Invitation = await _invitationService.DeleteInvitationAsync(id);
-            return Ok(Invitation);
+            var invitation = await _invitationService.DeleteInvitationAsync(id);
+            return Ok(invitation);
         }
     }
 }

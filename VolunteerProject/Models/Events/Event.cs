@@ -8,15 +8,16 @@ public class Event
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; set; }
+    public int Id { get; init; }
     
     [Required]
     public int OrganizationId { get; set; }
     
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
     
+    [MaxLength(100)]
     public string? PhotoPath { get; set; }
     
     [Required]
@@ -27,11 +28,11 @@ public class Event
     
     [Required]
     [MaxLength(100)]
-    public string City { get; set; }
+    public string? City { get; set; }
 
     [Required] 
     [MaxLength(2000)] 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     [Required]
     public Organization Organization { get; set; }

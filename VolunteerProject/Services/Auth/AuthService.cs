@@ -44,6 +44,11 @@ namespace VolunteerProject.Services
                 BirthDate = DateTime.SpecifyKind(model.BirthDate, DateTimeKind.Utc),
             };
 
+            if (model.Password == null)
+            {
+                return new AuthResult { Success = false, Errors = new List<string> { "Password is required." } };
+            }
+            
             var result = await _volunteerManager.CreateAsync(volunteer, model.Password);
 
             if (!result.Succeeded)
@@ -67,7 +72,12 @@ namespace VolunteerProject.Services
                 PhoneNumber = model.PhoneNumber,
                 UserName = model.Email
             };
-
+                
+            if (model.Password == null)
+            {
+                return new AuthResult { Success = false, Errors = new List<string> { "Password is required." } };
+            }
+            
             var result = await _organizationManager.CreateAsync(organization, model.Password);
 
             if (!result.Succeeded)
@@ -83,12 +93,23 @@ namespace VolunteerProject.Services
         
         public async Task<AuthResult> LoginAsync(LoginModel model)
         {
+            if (model.Email == null)
+            {
+                return new AuthResult { Success = false, Errors = new List<string> { "Email is required." } };
+            }
+            
             var user = await _signInManager.UserManager.FindByNameAsync(model.Email);
+            
             if (user == null)
             {
                 return new AuthResult { Success = false, Errors = new List<string> { "User does not exist." } };
             }
 
+            if (user.UserName == null || model.Password == null)
+            {
+                return new AuthResult { Success = false, Errors = new List<string> { "Email or Password does not exist." } };
+            }
+            
             var result = await _signInManager.PasswordSignInAsync(user.UserName, model.Password, false, false);
 
             if (!result.Succeeded)

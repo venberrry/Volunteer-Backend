@@ -27,7 +27,7 @@ public class EventsController : ControllerBase
         return Ok(events);
     }
     
-    [HttpGet("GetById{id}")]
+    [HttpGet("GetById/{id:int}")]
     public async Task<ActionResult<Event>> GetEventById(int id)
     {
         var eventItem = await _eventService.GetEventByIdAsync(id);
@@ -46,7 +46,7 @@ public class EventsController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-
+        
         // Получение идентификатора текущего пользователя
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -67,7 +67,7 @@ public class EventsController : ControllerBase
     }
 
     [Authorize(Roles = "Organization")]
-    [HttpPut("UpdateEvent{id}")]
+    [HttpPut("UpdateEvent/{id:int}")]
     public async Task<IActionResult> UpdateEvent(int id, Event updatedEvent)
     {
         var eventItem = await _eventService.UpdateEventAsync(id, updatedEvent);
@@ -79,7 +79,7 @@ public class EventsController : ControllerBase
     }
 
     [Authorize(Roles = "Organization")]
-    [HttpDelete("Delete{id}")]
+    [HttpDelete("Delete/{id:int}")]
     public async Task<IActionResult> DeleteEvent(int id)
     {
         var success = await _eventService.DeleteEventAsync(id);

@@ -12,19 +12,20 @@ public class Volunteer : User
 
     [Required]
     [MaxLength(100)]
-    public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     [Required]
     [MaxLength(100)]
-    public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     [MaxLength(100)]
     public string? MiddleName { get; set; }
 
     [Required]
     [EmailAddress]
-    public override string Email { get; set; }
+    public override string? Email { get; set; }
 
+    [MaxLength(500)]
     public string? PhotoPath { get; set; }
 
     [Required]
@@ -32,8 +33,9 @@ public class Volunteer : User
 
     [Required]
     [MaxLength(15)]
-    public string PhoneNumber { get; set; }
-
+    public new string? PhoneNumber { get; set; }
+    
+    [MaxLength(400)]
     public string? About { get; set; }
 
     public int? ParticipationCount { get; set; }

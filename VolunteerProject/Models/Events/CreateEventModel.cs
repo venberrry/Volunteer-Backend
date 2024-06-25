@@ -3,7 +3,7 @@ public class CreateEventModel
 {
     [Required]
     [MaxLength(100)]
-    public string Title { get; set; }
+    public string? Title { get; set; }
 
     [Required]
     public DateTime StartDate { get; set; }
@@ -13,9 +13,9 @@ public class CreateEventModel
 
     [Required]
     [MaxLength(100)]
-    public string City { get; set; }
+    public string? City { get; set; }
 
     [Required]
     [MaxLength(2000)]
-    public string Description { get; set; }
+    public string? Description { get; set; }
 }

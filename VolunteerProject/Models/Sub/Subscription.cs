@@ -8,13 +8,13 @@ public class Subscription
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int IdS { get; set; }
+    public int Id { get; init; }
 
     [Required]
-    public int VolunteerId { get; set; }
+    public int VolunteerId { get; init; }
 
     [Required]
-    public int OrganizationId { get; set; }
+    public int OrganizationId { get; init; }
     
     public Volunteer Volunteer { get; set; }
     public Organization Organization { get; set; }

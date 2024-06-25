@@ -31,7 +31,7 @@ public class AccountController : ControllerBase
 
         if (result.Success)
         {
-            return Ok(new { Message = "Volunteer registered successfully" });
+            return Ok(new { Message = "Волонтер успешно зарегистрирован" });
         }
 
         foreach (var error in result.Errors)

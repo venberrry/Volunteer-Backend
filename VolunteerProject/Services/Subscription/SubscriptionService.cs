@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 public interface ISubscriptionService
 {
-    Task<Subscription> SubscribeAsync(int volunteerId, int organizationId);
-    Task<Subscription> SubscribeByInvitationAsync(int invitationId, int volunteerId);
-    Task<IEnumerable<Subscription>> GetSubscriptionsAsync();
+    Task<Subscription?> SubscribeAsync(int volunteerId, int organizationId);
+    Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerId);
+    Task<IEnumerable<Subscription?>> GetSubscriptionsAsync();
 
 }
 public class SubscriptionService : ISubscriptionService
@@ -22,7 +22,7 @@ public class SubscriptionService : ISubscriptionService
         _context = context;
     }
 
-    public async Task<Subscription> SubscribeAsync(int volunteerId, int organizationId)
+    public async Task<Subscription?> SubscribeAsync(int volunteerId, int organizationId)
     {
         var subscription = new Subscription
         {
@@ -35,7 +35,7 @@ public class SubscriptionService : ISubscriptionService
         return subscription;
     }
 
-    public async Task<Subscription> SubscribeByInvitationAsync(int invitationId, int volunteerId)
+    public async Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerId)
     {
         var invitation = await _context.Invitations.FindAsync(invitationId);
         
@@ -47,7 +47,7 @@ public class SubscriptionService : ISubscriptionService
         return await SubscribeAsync(invitation.VolunteerId, invitation.OrganizationId);
     }
 
-    public async Task<IEnumerable<Subscription>> GetSubscriptionsAsync()
+    public async Task<IEnumerable<Subscription?>> GetSubscriptionsAsync()
     {
         return await _context.Subscriptions.ToListAsync();
     }

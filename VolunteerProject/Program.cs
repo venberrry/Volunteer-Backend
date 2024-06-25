@@ -8,6 +8,7 @@ using VolunteerProject.Services.Events;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using VolunteerProject.Helpers;
 using VolunteerProject.Services.Subscription;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,34 +17,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Добавление служб для управления идентификацией
-builder.Services.AddIdentity<User, IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-// Регистрация UserManager и RoleManager для Volunteer
-builder.Services.AddIdentityCore<Volunteer>()
-    .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
 
-// Регистрация UserManager и RoleManager для Organization
-builder.Services.AddIdentityCore<Organization>()
-    .AddRoles<IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
 
-
-// Регистрация services
-builder.Services.AddScoped<UserManager<Organization>>();
-builder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IInvitationService, InvitationService>();
-builder.Services.AddScoped<UserManager<Volunteer>>();
-builder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+StartupHelpers.RegisterDomainServices(builder, builder);
 
 // Настройка JWT аутентификации
 var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
@@ -169,3 +146,5 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 app.Run();
+
+

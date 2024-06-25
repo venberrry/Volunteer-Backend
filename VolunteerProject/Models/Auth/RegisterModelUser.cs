@@ -1,4 +1,5 @@
-﻿namespace VolunteerProject.Models.Auth;
+﻿/*
+namespace VolunteerProject.Models.Auth;
 using System.ComponentModel.DataAnnotations;
 public class RegisterModelUser
 {
@@ -28,3 +29,4 @@ public class RegisterModelUser
     public string? Website { get; set; }
     public string WorkingHours { get; set; }
 }
+*/

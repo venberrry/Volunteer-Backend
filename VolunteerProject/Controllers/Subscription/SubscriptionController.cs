@@ -35,7 +35,7 @@ public class SubscriptionController : ControllerBase
     }
 
     [Authorize(Roles = "Volunteer")]
-    [HttpPost("AcceptInvitation/{invitationId}")]
+    [HttpPost("AcceptInvitation/{invitationId:int}")]
     public async Task<IActionResult> SubscribeByInvitation(int invitationId)
     {
         var volunteerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
