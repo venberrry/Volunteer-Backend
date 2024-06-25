@@ -232,11 +232,11 @@ namespace VolunteerProject.Migrations
 
             modelBuilder.Entity("VolunteerProject.Models.Application", b =>
                 {
-                    b.Property<int>("IdReq")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdReq"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CoverLetter")
                         .HasMaxLength(400)
@@ -259,7 +259,7 @@ namespace VolunteerProject.Migrations
                     b.Property<int>("VolunteerId")
                         .HasColumnType("integer");
 
-                    b.HasKey("IdReq");
+                    b.HasKey("Id");
 
                     b.HasIndex("EventId");
 
@@ -293,7 +293,8 @@ namespace VolunteerProject.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PhotoPath")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
@@ -312,11 +313,11 @@ namespace VolunteerProject.Migrations
 
             modelBuilder.Entity("VolunteerProject.Models.Invitation", b =>
                 {
-                    b.Property<int>("IdInv")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdInv"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
@@ -324,7 +325,7 @@ namespace VolunteerProject.Migrations
                     b.Property<int>("VolunteerId")
                         .HasColumnType("integer");
 
-                    b.HasKey("IdInv");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrganizationId");
 
@@ -335,15 +336,11 @@ namespace VolunteerProject.Migrations
 
             modelBuilder.Entity("VolunteerProject.Models.Subscription", b =>
                 {
-                    b.Property<int>("IdS")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("IdS"));
-
-                    b.Property<string>("CoverLetter")
-                        .HasMaxLength(400)
-                        .HasColumnType("character varying(400)");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
@@ -351,7 +348,7 @@ namespace VolunteerProject.Migrations
                     b.Property<int>("VolunteerId")
                         .HasColumnType("integer");
 
-                    b.HasKey("IdS");
+                    b.HasKey("Id");
 
                     b.HasIndex("OrganizationId");
 
@@ -371,9 +368,15 @@ namespace VolunteerProject.Migrations
                 {
                     b.HasBaseType("VolunteerProject.Models.User");
 
+                    b.Property<string>("ActualAddress")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
                     b.Property<string>("ContactEmail")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("LegalAddress")
                         .IsRequired()
@@ -386,13 +389,17 @@ namespace VolunteerProject.Migrations
                         .HasColumnType("character varying(200)");
 
                     b.Property<string>("PhotoPath")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Website")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("WorkingHours")
                         .IsRequired()
@@ -409,7 +416,9 @@ namespace VolunteerProject.Migrations
                     b.HasBaseType("VolunteerProject.Models.User");
 
                     b.Property<string>("About")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(400)
+                        .HasColumnType("character varying(400)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("timestamp with time zone");
@@ -425,14 +434,17 @@ namespace VolunteerProject.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<string>("MiddleName")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int?>("ParticipationCount")
+                    b.Property<int>("ParticipationCount")
                         .HasColumnType("integer");
 
                     b.Property<string>("PhotoPath")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("integer");
