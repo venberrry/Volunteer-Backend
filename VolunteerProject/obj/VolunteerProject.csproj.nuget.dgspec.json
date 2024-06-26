@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj": {}
+    "D:\\repos\\Bars\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj": {}
   },
   "projects": {
-    "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj": {
+    "D:\\repos\\Bars\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
+        "projectUniqueName": "D:\\repos\\Bars\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
         "projectName": "VolunteerProject",
-        "projectPath": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
-        "packagesPath": "C:\\Users\\joyse\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\joyse\\RiderProjects\\Volunteer-Backend\\VolunteerProject\\obj\\",
+        "projectPath": "D:\\repos\\Bars\\Volunteer-Backend\\VolunteerProject\\VolunteerProject.csproj",
+        "packagesPath": "C:\\Users\\bulat\\.nuget\\packages\\",
+        "outputPath": "D:\\repos\\Bars\\Volunteer-Backend\\VolunteerProject\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\joyse\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bulat\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -34,12 +38,21 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.6.0, )"
+            },
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
               "version": "[8.0.6, )"
@@ -98,7 +111,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -6,13 +6,18 @@ using VolunteerProject.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using VolunteerProject.Services.Subscription;
+// using VolunteerProject.Services.Email;
+
 public class SubscriptionService : ISubscriptionService
 {
     private readonly ApplicationDbContext _context;
+    // private readonly IEmailService _emailService;
 
     public SubscriptionService(ApplicationDbContext context)
+    // public SubscriptionService(ApplicationDbContext context, IEmailService emailService)
     {
         _context = context;
+        // _emailService = emailService;
     }
 
     public async Task<Subscription?> SubscribeAsync(int volunteerId, int organizationId)
