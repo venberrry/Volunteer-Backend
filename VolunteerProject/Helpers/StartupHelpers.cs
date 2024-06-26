@@ -40,6 +40,6 @@ public static class StartupHelpers
         webApplicationBuilder.Services.AddScoped<RoleManager<IdentityRole<int>>>();
         webApplicationBuilder.Services.AddScoped<IEventService, EventService>();
         webApplicationBuilder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
-        webApplicationBuilder.Services.AddScoped<IEmailService, EmailService>();
+        // webApplicationBuilder.Services.AddScoped<IEmailService, EmailService>();
     }
 }
