@@ -5,14 +5,7 @@ using VolunteerProject.DataBase;
 using VolunteerProject.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-
-public interface ISubscriptionService
-{
-    Task<Subscription?> SubscribeAsync(int volunteerId, int organizationId);
-    Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerId);
-    Task<IEnumerable<Subscription?>> GetSubscriptionsAsync();
-
-}
+using VolunteerProject.Services.Subscription;
 public class SubscriptionService : ISubscriptionService
 {
     private readonly ApplicationDbContext _context;

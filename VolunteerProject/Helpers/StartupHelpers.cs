@@ -2,7 +2,9 @@
 using VolunteerProject.DataBase;
 using VolunteerProject.Models;
 using VolunteerProject.Services;
+using VolunteerProject.Services.Auth;
 using VolunteerProject.Services.Events;
+using VolunteerProject.Services.Invitation;
 using VolunteerProject.Services.Subscription;
 
 namespace VolunteerProject.Helpers;

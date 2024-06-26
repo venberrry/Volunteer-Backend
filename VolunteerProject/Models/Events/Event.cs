@@ -1,7 +1,7 @@
-﻿namespace VolunteerProject.Models;
-
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
+namespace VolunteerProject.Models;
 
 // Модель мероприятия
 public class Event

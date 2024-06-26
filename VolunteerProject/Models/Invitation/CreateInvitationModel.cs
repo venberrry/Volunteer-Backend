@@ -1,10 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VolunteerProject.Models
+namespace VolunteerProject.Models;
+
+public class CreateInvitationModel
 {
-    public class CreateInvitationModel
-    {
-        [Required]
-        public int VolunteerId { get; init; }
-    }
+    [Required] public int VolunteerId { get; init; }
 }
