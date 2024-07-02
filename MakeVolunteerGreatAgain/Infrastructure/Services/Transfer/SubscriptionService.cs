@@ -48,7 +48,7 @@ public class SubscriptionService : ISubscriptionService
         return subscription;
     }
 
-    public async Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerId)
+    public async Task<Subscription> SubscribeByInvitationAsync(int invitationId, int volunteerId)
     {
         var invitation = await _context.Invitations.FindAsync(invitationId);
         
@@ -60,9 +60,12 @@ public class SubscriptionService : ISubscriptionService
         return await SubscribeAsync(invitation.VolunteerId, invitation.OrganizationId);
     }
 
-    public async Task<IEnumerable<Subscription?>> GetSubscriptionsAsync()
+    public async Task<IEnumerable<Subscription>> GetSubscriptionsAsync()
     {
-        return await _context.Subscriptions.ToListAsync();
+        return await _context.Subscriptions
+            .Include(s => s.Volunteer)
+            .Include(s => s.Organization)
+            .ToListAsync();
     }
     
     public async Task<IEnumerable<Subscription>> GetSubscriptionsByVolunteerAsync(int volunteerId) // Реализация нового метода

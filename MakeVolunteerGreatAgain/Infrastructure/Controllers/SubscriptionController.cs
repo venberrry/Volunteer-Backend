@@ -49,7 +49,9 @@ namespace MakeVolunteerGreatAgain.Web.Controllers
         {
             var subscriptions = await _subscriptionService.GetSubscriptionsAsync();
 
-            return Ok(subscriptions);
+            var volunteerId = subscriptions.Select(s => s.VolunteerId).ToList();
+
+            return Ok(volunteerId);
         }
 
         [Authorize(Roles = "Volunteer")]
