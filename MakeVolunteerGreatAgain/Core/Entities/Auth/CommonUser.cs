@@ -18,7 +18,7 @@ namespace MakeVolunteerGreatAgain.Core.Entities
     // bool PhoneNumberConfirmed
     // bool TwoFactorEnabled
     // LockoutEnd
-    // LockoutEnabledф
+    // LockoutEnabled
     // AccessFailedCount
     // 
     public class CommonUser : IdentityUser<int>

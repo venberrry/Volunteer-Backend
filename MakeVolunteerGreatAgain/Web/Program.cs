@@ -41,6 +41,12 @@ builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 // Добавление Swagger, JWT tokens, CORS 
 SwaggerJwtConfigurator.StartupConfigurator(builder);
 
+// От циклов в JSON и для взаимосвязанных объектов
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+});
+
 // Добавление служб для контроллеров
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -74,5 +80,4 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages();
 app.Run();

@@ -14,15 +14,35 @@ public class SubscriptionService : ISubscriptionService
         _context = context;
     }
 
-    public async Task<Subscription?> SubscribeAsync(int volunteerId, int organizationId)
+    public async Task<Subscription?> SubscribeAsync(int volunteerCommonUserId, int organizationCommonUserId)
     {
+        // Найти волонтера по CommonUserId
+        var volunteer = await _context.Volunteers
+            .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId);
+        if (volunteer == null)
+        {
+            throw new Exception("Volunteer not found");
+        }
+
+        // Найти организацию по CommonUserId
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
+        if (organization == null)
+        {
+            throw new Exception("Organization not found");
+        }
+
+        // Создать новую подписку
         var subscription = new Subscription
         {
-            VolunteerId = volunteerId,
-            OrganizationId = organizationId,
-            Status = "Pending"
+            VolunteerId = volunteer.Id,
+            OrganizationId = organization.Id,
+            Status = "Pending",
+            Volunteer = volunteer,
+            Organization = organization
         };
 
+        // Добавить и сохранить подписку
         _context.Subscriptions.Add(subscription);
         await _context.SaveChangesAsync();
         return subscription;
