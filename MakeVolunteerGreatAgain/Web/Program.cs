@@ -1,55 +1,16 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using MakeVolunteerGreatAgain.Core.Entities;
 using MakeVolunteerGreatAgain.Persistence;
-using MakeVolunteerGreatAgain.Infrastructure.Services;
-using MakeVolunteerGreatAgain.Core.Services;
-using MakeVolunteerGreatAgain.Core.Repositories;
-using MakeVolunteerGreatAgain.Infrastructure.Services.Token;
+using MakeVolunteerGreatAgain.Web.Helpers;
 using MakeVolunteerGreatAgain.Web.Properties;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавление конфигурации из файла appsettings.json
-builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("Web/appsettings.json", optional: false, reloadOnChange: true)
-    .AddEnvironmentVariables();
+// Регистрация сервисов
+// От циклов в JSON и для взаимосвязанных объектов
 
-// Добавление контекста базы данных
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Регистрация служб Identity
-builder.Services.AddIdentity<CommonUser, IdentityRole<int>>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
-
-// Регистрация RoleInitializer
-builder.Services.AddScoped<RoleInitializer>();
-
-// Регистрация репозиториев и сервисов
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IVolunteerRepository, VolunteerRepository>();
-builder.Services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
-builder.Services.AddScoped<IEventService, EventService>();
-builder.Services.AddScoped<IInvitationService, InvitationService>();
-builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+StartupHelpers.RegisterDomainServices(builder, builder);
 
 // Добавление Swagger, JWT tokens, CORS 
 SwaggerJwtConfigurator.StartupConfigurator(builder);
-
-// От циклов в JSON и для взаимосвязанных объектов
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-});
-
-// Добавление служб для контроллеров
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
@@ -57,7 +18,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MakeVolunteerGreatAgain API V1"));
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MakeVolunteerGreatAgain API V1");
+        c.InjectStylesheet("/swagger-ui/dark-theme.css");
+    });
 }
 
 app.UseHttpsRedirection();

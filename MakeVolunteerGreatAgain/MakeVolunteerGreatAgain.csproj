@@ -23,4 +23,8 @@
       <Folder Include="Persistence\Migrations\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\swagger-ui\dark-theme.css" />
+    </ItemGroup>
+
 </Project>

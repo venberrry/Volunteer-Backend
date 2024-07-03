@@ -239,3 +239,4 @@ C:\Users\joyse\RiderProjects\Volunteer-Backend\MakeVolunteerGreatAgain\obj\Debug
 C:\Users\joyse\RiderProjects\Volunteer-Backend\MakeVolunteerGreatAgain\obj\Debug\net8.0\MakeVolunteerGreatAgain.pdb
 C:\Users\joyse\RiderProjects\Volunteer-Backend\MakeVolunteerGreatAgain\obj\Debug\net8.0\MakeVolunteerGreatAgain.genruntimeconfig.cache
 C:\Users\joyse\RiderProjects\Volunteer-Backend\MakeVolunteerGreatAgain\obj\Debug\net8.0\ref\MakeVolunteerGreatAgain.dll
+C:\Users\joyse\RiderProjects\Volunteer-Backend\MakeVolunteerGreatAgain\bin\Debug\net8.0\MakeVolunteerGreatAgain.staticwebassets.runtime.json
