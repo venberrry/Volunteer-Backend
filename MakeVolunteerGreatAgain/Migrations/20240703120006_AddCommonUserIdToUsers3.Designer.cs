@@ -3,6 +3,7 @@ using System;
 using MakeVolunteerGreatAgain.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MakeVolunteerGreatAgain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240703120006_AddCommonUserIdToUsers3")]
+    partial class AddCommonUserIdToUsers3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -195,6 +198,9 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.Property<int>("CommonUserId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("CommonUserId1")
+                        .HasColumnType("integer");
+
                     b.Property<string>("LegalAddress")
                         .HasColumnType("text");
 
@@ -213,6 +219,9 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CommonUserId")
+                        .IsUnique();
+
+                    b.HasIndex("CommonUserId1")
                         .IsUnique();
 
                     b.ToTable("Organizations");
@@ -265,6 +274,9 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.Property<int>("CommonUserId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("CommonUserId1")
+                        .HasColumnType("integer");
+
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
 
@@ -283,6 +295,9 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CommonUserId");
+
+                    b.HasIndex("CommonUserId1")
+                        .IsUnique();
 
                     b.ToTable("Volunteers");
                 });
@@ -476,6 +491,10 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MakeVolunteerGreatAgain.Core.Entities.CommonUser", null)
+                        .WithOne("Organization")
+                        .HasForeignKey("MakeVolunteerGreatAgain.Core.Entities.Organization", "CommonUserId1");
+
                     b.Navigation("CommonUser");
                 });
 
@@ -505,6 +524,10 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .HasForeignKey("CommonUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("MakeVolunteerGreatAgain.Core.Entities.CommonUser", null)
+                        .WithOne("Volunteer")
+                        .HasForeignKey("MakeVolunteerGreatAgain.Core.Entities.Volunteer", "CommonUserId1");
 
                     b.Navigation("CommonUser");
                 });
@@ -557,6 +580,15 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MakeVolunteerGreatAgain.Core.Entities.CommonUser", b =>
+                {
+                    b.Navigation("Organization")
+                        .IsRequired();
+
+                    b.Navigation("Volunteer")
                         .IsRequired();
                 });
 

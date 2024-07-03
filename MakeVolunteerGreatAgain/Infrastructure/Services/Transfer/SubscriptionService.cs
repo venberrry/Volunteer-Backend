@@ -35,6 +35,7 @@ public class SubscriptionService : ISubscriptionService
         // Создать новую подписку
         var subscription = new Subscription
         {
+            // ОНО НЕ НАДО АРААРОАОАОАООАРАОААОАОА ПАМАГИТЕ ПАЖАЛАСТА XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
             VolunteerId = volunteer.Id,
             OrganizationId = organization.Id,
             Status = "Pending",
@@ -60,16 +61,34 @@ public class SubscriptionService : ISubscriptionService
         return await SubscribeAsync(invitation.VolunteerId, invitation.OrganizationId);
     }
 
-    public async Task<IEnumerable<Subscription>> GetSubscriptionsAsync()
+    public async Task<IEnumerable<Subscription>> GetSubscriptionsAsync(int organizationCommonUserId)
     {
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
+        if (organization == null)
+        {
+            throw new Exception("Organization not found");
+        }
+
         return await _context.Subscriptions
-            .Include(s => s.Volunteer)
-            .Include(s => s.Organization)
+            .Where(s => s.OrganizationId == organization.Id)
             .ToListAsync();
     }
     
-    public async Task<IEnumerable<Subscription>> GetSubscriptionsByVolunteerAsync(int volunteerId) // Реализация нового метода
+    public async Task<IEnumerable<Subscription>> GetSubscriptionsByVolunteerAsync(int volunteerCommonUserId)
     {
-        return await _context.Subscriptions.Where(s => s.VolunteerId == volunteerId).ToListAsync();
+        // Найти волонтера по CommonUserId
+        var volunteer = await _context.Volunteers
+            .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId);
+
+        if (volunteer == null)
+        {
+            throw new Exception("Volunteer not found");
+        }
+
+        // Получить подписки для найденного волонтера
+        return await _context.Subscriptions
+            .Where(s => s.VolunteerId == volunteer.Id)
+            .ToListAsync();
     }
 }

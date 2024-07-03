@@ -28,15 +28,16 @@ namespace MakeVolunteerGreatAgain.Persistence
                 .HasOne(v => v.CommonUser)
                 .WithMany()
                 .HasForeignKey(v => v.CommonUserId)
+                .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Organization -> CommonUser: Один к одному
             // Organization имеет внешний ключ CommonUserId, указывающий на CommonUser
             modelBuilder.Entity<Organization>()
                 .HasOne(o => o.CommonUser)
-                .WithMany()
-                .HasForeignKey(o => o.CommonUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithOne()
+                .HasForeignKey<Organization>(o => o.CommonUserId)
+                .IsRequired();
 
             // Volunteer -> Applications: Один ко многим
             // Один Volunteer может иметь много Applications

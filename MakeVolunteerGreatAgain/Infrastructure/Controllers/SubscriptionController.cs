@@ -43,25 +43,34 @@ namespace MakeVolunteerGreatAgain.Web.Controllers
             return Ok(subscription);
         }
 
+        // Выводит все подписки, а надо только конкретной организации!!!!
         [Authorize(Roles = "Organization")]
         [HttpGet("GetSubscriptions")]
         public async Task<IActionResult> GetSubscriptions()
         {
-            var subscriptions = await _subscriptionService.GetSubscriptionsAsync();
+            var organizationId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+            var subscriptions = await _subscriptionService.GetSubscriptionsAsync(organizationId);
+            
+            var subscriptionIds = subscriptions.Select(s => s.VolunteerId).ToList();
 
-            var volunteerId = subscriptions.Select(s => s.VolunteerId).ToList();
-
-            return Ok(volunteerId);
+            return Ok(subscriptionIds);
         }
-
+        
         [Authorize(Roles = "Volunteer")]
         [HttpGet("MySubscriptions")]
         public async Task<IActionResult> GetSubscriptionsForVolunteer()
         {
-            var volunteerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            var subscriptions = await _subscriptionService.GetSubscriptionsByVolunteerAsync(volunteerId);
+            var volunteerCommonUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            return Ok(subscriptions);
+            // Получаем подписки для волонтера по его CommonUserId
+            var subscriptions = await _subscriptionService.GetSubscriptionsByVolunteerAsync(volunteerCommonUserId);
+
+            // Извлекаем названия организаций, на которые подписан волонтер
+            var organizationNames = subscriptions.Select(s => s.OrganizationId).ToList();
+
+            return Ok(organizationNames);
         }
+
     }
 }

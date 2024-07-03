@@ -15,5 +15,6 @@ namespace MakeVolunteerGreatAgain.Core.Entities
         public CommonUser CommonUser { get; set; }
         public ICollection<Application> Applications { get; set; } = new List<Application>();
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        
     }
 }

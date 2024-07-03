@@ -24,9 +24,31 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
         {
             var events = await _eventService.GetAllEventsAsync();
-            return Ok(events);
+            
+            var eventsToReturn = events.Select(e => new 
+            {
+                Title = e.Title,
+                PhotoPath = e.PhotoPath,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                City = e.City,
+                OrganizationId = e.OrganizationId
+            }).ToList();
+
+            return Ok(eventsToReturn);
         }
 
+        [Authorize(Roles = "Organization")]
+        [HttpPost("CreateEvent")]
+        public async Task<IActionResult> CreateEvent([FromBody] EventCreateDTO eventModel)
+        {
+            var organizationsId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var createEvent = await _eventService.CreateEventAsync(eventModel, organizationsId);
+
+            return Ok(createEvent);
+        }
+
+        
         [HttpGet("GetById/{id:int}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
         {
@@ -38,34 +60,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             return Ok(eventItem);
         }
 
-        [Authorize(Roles = "Organization")]
-        [HttpPost("CreateEvent")]
-        public async Task<IActionResult> CreateEvent([FromBody] EventCreateDTO eventModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // Получение идентификатора текущего пользователя
-            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            // Создание объекта мероприятия с использованием идентификатора пользователя
-            var eventObj = new Event
-            {
-                Title = eventModel.Title,
-                StartDate = eventModel.StartDate,
-                EndDate = eventModel.EndDate,
-                City = eventModel.City,
-                Description = eventModel.Description,
-                OrganizationId = userId // Установка OrganizationId как идентификатор текущего пользователя
-            };
-
-            var createdEvent = await _eventService.CreateEventAsync(eventObj);
-
-            return CreatedAtAction(nameof(GetEventById), new { id = createdEvent.Id }, createdEvent);
-        }
-
+        // НУЖНО СДЕЛАТЬ
         [Authorize(Roles = "Organization")]
         [HttpPut("UpdateEvent/{id:int}")]
         public async Task<IActionResult> UpdateEvent(int id, Event updatedEvent)
@@ -77,7 +72,8 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             }
             return NoContent();
         }
-
+        
+        //Можно добавить защиту от удаления под другими организациями
         [Authorize(Roles = "Organization")]
         [HttpDelete("Delete/{id:int}")]
         public async Task<IActionResult> DeleteEvent(int id)
