@@ -1,0 +1,31 @@
+﻿version: "3.9"
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123FDAS4aswd"
+      POSTGRES_DB: "GreatVolunteer"
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: MakeVolunteerGreatAgain/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=GreatVolunteer;Username=postgres;Password=123FDAS4aswd
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=123    # Пароль ставим свой 
+    depends_on:
+      - db
+    ports:
+      - "8443:443" # Для HTTPS
+      - "8080:80"  # Для HTTP
+
+volumes:
+  pgdata:

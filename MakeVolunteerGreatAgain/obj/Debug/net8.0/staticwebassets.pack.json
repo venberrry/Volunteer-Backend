@@ -1,0 +1,25 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Vlada\\Onion_Volunteer_Backend\\Volunteer-Backend\\MakeVolunteerGreatAgain\\wwwroot\\swagger-ui\\dark-theme.css",
+      "PackagePath": "staticwebassets\\swagger-ui\\dark-theme.css"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.MakeVolunteerGreatAgain.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.build.MakeVolunteerGreatAgain.props",
+      "PackagePath": "build\\MakeVolunteerGreatAgain.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildMultiTargeting.MakeVolunteerGreatAgain.props",
+      "PackagePath": "buildMultiTargeting\\MakeVolunteerGreatAgain.props"
+    },
+    {
+      "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.buildTransitive.MakeVolunteerGreatAgain.props",
+      "PackagePath": "buildTransitive\\MakeVolunteerGreatAgain.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
