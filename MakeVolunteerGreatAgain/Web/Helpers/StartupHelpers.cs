@@ -3,6 +3,7 @@ using MakeVolunteerGreatAgain.Core.Repositories;
 using MakeVolunteerGreatAgain.Core.Services;
 using MakeVolunteerGreatAgain.Infrastructure.Services;
 using MakeVolunteerGreatAgain.Infrastructure.Services.Token;
+using MakeVolunteerGreatAgain.Infrastructure.Services.Transfer;
 using MakeVolunteerGreatAgain.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -45,5 +46,6 @@ public static class StartupHelpers
         builder.Services.AddScoped<IEventService, EventService>();
         builder.Services.AddScoped<IInvitationService, InvitationService>();
         builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+        builder.Services.AddScoped<IApplicationService, ApplicationService>();
     }
 }
