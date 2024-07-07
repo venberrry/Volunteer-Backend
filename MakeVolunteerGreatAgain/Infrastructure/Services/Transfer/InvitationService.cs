@@ -21,15 +21,47 @@ public class InvitationService : IInvitationService
     }
 
     //Получение всех приглашений
-    public async Task<IEnumerable<Invitation?>> GetAllInvitationsAsync()
+    public async Task<IEnumerable<Invitation>> GetAllInvitationsAsync(int organizationCommonUserId)
     {
-        return await _context.Invitations.ToListAsync();
-    }
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
+        if (organization == null)
+        {
+            throw new Exception("Organization not found");
+        }
 
-    //Создание нового приглашения
-    public async Task<Invitation> CreateInvitationAsync(Invitation invitation)
+        return await _context.Invitations
+            .Where(s => s.OrganizationId == organization.Id)
+            .ToListAsync();
+    }
+    
+    // Создание нового приглашения
+    public async Task<Invitation> CreateInvitationAsync(int volunteerCommonUserId, int organizationCommonUserId)
     {
-        _context.Invitations.Add(invitation);
+        // Найти волонтера по CommonUserId
+        var volunteer = await _context.Volunteers
+            .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId);
+        if (volunteer == null)
+        {
+            throw new Exception("Volunteer not found");
+        }
+
+        // Найти организацию по CommonUserId
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
+        if (organization == null)
+        {
+            throw new Exception("Organization not found");
+        }
+    
+        var invitation = new Invitation
+        {
+            OrganizationId = organization.Id,
+            Organization = organization,
+            VolunteerId = volunteer.Id,
+            Volunteer = volunteer
+        };
+        await _context.Invitations.AddAsync(invitation);
         await _context.SaveChangesAsync();
         return invitation;
     }

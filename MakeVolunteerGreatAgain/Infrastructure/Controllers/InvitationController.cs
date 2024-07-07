@@ -6,78 +6,74 @@ using MakeVolunteerGreatAgain.Core.DTOs;
 using MakeVolunteerGreatAgain.Core.Entities;
 using MakeVolunteerGreatAgain.Core.Services;
 
-namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
+namespace MakeVolunteerGreatAgain.Infrastructure.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class InvitationController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class InvitationController : ControllerBase
+    private readonly IInvitationService _invitationService;
+
+    public InvitationController(IInvitationService invitationService)
     {
-        private readonly IInvitationService _invitationService;
+        _invitationService = invitationService;
+    }
 
-        public InvitationController(IInvitationService invitationService)
+    [Authorize(Roles = "Organization")]
+    [HttpPost("CreateInvitation")]
+    public async Task<IActionResult> CreateInvitation([FromBody] CreateInvitationDTO invitation)
+    {
+        var organizationId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var volunteerId = invitation.VolunteerId;
+        var createdInvitation = await _invitationService.CreateInvitationAsync(volunteerId, organizationId);
+        return Ok(createdInvitation);
+    }
+
+    [Authorize(Roles = "Organization")]
+    [HttpGet("GetAllInvitations")]
+    public async Task<IActionResult> GetAllInvitations()
+    {
+        var organizationId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var invitations = await _invitationService.GetAllInvitationsAsync(organizationId);
+        return Ok(invitations);
+    }
+
+    [Authorize(Roles = "Organization")]
+    [HttpGet("GetInvitationById/{id:int}")]
+    public async Task<IActionResult> GetInvitationById(int id)
+    {
+        var invitation = await _invitationService.GetInvitationByIdAsync(id);
+        if (invitation == null)
         {
-            _invitationService = invitationService;
+            return NotFound("Invitation not found.");
         }
 
-        [Authorize(Roles = "Organization")]
-        [HttpPost("CreateInvitation")]
-        public async Task<IActionResult> CreateInvitation([FromBody] CreateInvitationDTO invitation)
+        return Ok(invitation);
+    }
+
+    [Authorize(Roles = "Organization")]
+    [HttpPut("UpdateInvitation/{id:int}")]
+    public async Task<IActionResult> UpdateInvitation(int id, [FromBody] Invitation updatedInvitation)
+    {
+        var invitation = await _invitationService.UpdateInvitationAsync(id, updatedInvitation);
+        if (invitation == null)
         {
-            var organizationId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-            var invitationObj = new Invitation
-            {
-                VolunteerId = invitation.VolunteerId,
-                OrganizationId = organizationId
-            };
-
-            var createdInvitation = await _invitationService.CreateInvitationAsync(invitationObj);
-
-            return CreatedAtAction(nameof(GetInvitationById), new { id = createdInvitation.Id }, createdInvitation);
+            return NotFound("Invitation not found.");
         }
 
-        [Authorize(Roles = "Organization")]
-        [HttpGet("GetAllInvitations")]
-        public async Task<IActionResult> GetAllInvitations()
+        return Ok(invitation);
+    }
+
+    [Authorize(Roles = "Organization")]
+    [HttpDelete("DeleteInvitation/{id:int}")]
+    public async Task<IActionResult> DeleteInvitation(int id)
+    {
+        var result = await _invitationService.DeleteInvitationAsync(id);
+        if (result == null)
         {
-            var invitations = await _invitationService.GetAllInvitationsAsync();
-            return Ok(invitations);
+            return NotFound("Invitation not found.");
         }
 
-        [Authorize(Roles = "Organization")]
-        [HttpGet("GetInvitationById/{id:int}")]
-        public async Task<IActionResult> GetInvitationById(int id)
-        {
-            var invitation = await _invitationService.GetInvitationByIdAsync(id);
-            if (invitation == null)
-            {
-                return NotFound("Invitation not found.");
-            }
-            return Ok(invitation);
-        }
-
-        [Authorize(Roles = "Organization")]
-        [HttpPut("UpdateInvitation/{id:int}")]
-        public async Task<IActionResult> UpdateInvitation(int id, [FromBody] Invitation updatedInvitation)
-        {
-            var invitation = await _invitationService.UpdateInvitationAsync(id, updatedInvitation);
-            if (invitation == null)
-            {
-                return NotFound("Invitation not found.");
-            }
-            return Ok(invitation);
-        }
-
-        [Authorize(Roles = "Organization")]
-        [HttpDelete("DeleteInvitation/{id:int}")]
-        public async Task<IActionResult> DeleteInvitation(int id)
-        {
-            var result = await _invitationService.DeleteInvitationAsync(id);
-            if (result == null)
-            {
-                return NotFound("Invitation not found.");
-            }
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }
