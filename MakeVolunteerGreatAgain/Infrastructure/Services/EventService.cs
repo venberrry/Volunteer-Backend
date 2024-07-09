@@ -33,7 +33,7 @@ public class EventService : IEventService
             EndDate = eventModel.EndDate,
             City = eventModel.City,
             Description = eventModel.Description,
-            OrganizationId = organization.Id, // Установка OrganizationId как идентификатор организации
+            //OrganizationId = organization.Id, // Установка OrganizationId как идентификатор организации
             Organization = organization
         };
 
@@ -50,11 +50,14 @@ public class EventService : IEventService
 
     public async Task<Event?> GetEventByIdAsync(int id)
     {
-        return await _context.Events.FindAsync(id);
+        var eventItem = await _context.Events
+            .Include(e => e.Organization)
+            .FirstOrDefaultAsync(e => e.Id == id);
+        return eventItem;
     }
 
 
-    public async Task<Event> UpdateEventAsync(int id, Event updatedEvent)
+    public async Task<UpdateEventDTO> UpdateEventAsync(UpdateEventDTO updatedEvent, int id)
     {
         var existingEvent = await _context.Events.FindAsync(id);
         if (existingEvent == null)
@@ -68,10 +71,9 @@ public class EventService : IEventService
         existingEvent.EndDate = updatedEvent.EndDate;
         existingEvent.City = updatedEvent.City;
         existingEvent.Description = updatedEvent.Description;
-        existingEvent.OrganizationId = updatedEvent.OrganizationId;
 
         await _context.SaveChangesAsync();
-        return existingEvent;
+        return updatedEvent;
     }
 
     public async Task<bool> DeleteEventAsync(int id)
