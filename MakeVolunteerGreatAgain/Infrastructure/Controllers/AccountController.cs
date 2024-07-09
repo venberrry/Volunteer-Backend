@@ -100,7 +100,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             return BadRequest(ModelState);
         }
 
-        [HttpPost("update-volunteer")]
+        [HttpPut("update-volunteer")]
         public async Task<IActionResult> UpdateVolunteer([FromBody] UpdateVolunteerDTO model, int volunteerCommonUserId)
         {
             var volunteer = await _authService.UpdateVolunteerAsync(model, volunteerCommonUserId);
@@ -108,7 +108,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         }
         
         [Authorize(Roles = "Organization")]
-        [HttpPost("update-organization")]
+        [HttpPut("update-organization")]
         public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationDTO model, int organizationCommonUserId)
         {
             var organization = await _authService.UpdateOrganizationAsync(model, organizationCommonUserId);
