@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using MakeVolunteerGreatAgain.Core.Services;
 using MakeVolunteerGreatAgain.Core.Repositories.DTO;
 using MakeVolunteerGreatAgain.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 {
@@ -98,5 +99,21 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
             return BadRequest(ModelState);
         }
+
+        [HttpPost("update-volunteer")]
+        public async Task<IActionResult> UpdateVolunteer([FromBody] UpdateVolunteerDTO model, int volunteerCommonUserId)
+        {
+            var volunteer = await _authService.UpdateVolunteerAsync(model, volunteerCommonUserId);
+            return Ok(volunteer);
+        }
+        
+        [Authorize(Roles = "Organization")]
+        [HttpPost("update-organization")]
+        public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationDTO model, int organizationCommonUserId)
+        {
+            var organization = await _authService.UpdateOrganizationAsync(model, organizationCommonUserId);
+            return Ok(organization);
+        }
+        
     }
 }
