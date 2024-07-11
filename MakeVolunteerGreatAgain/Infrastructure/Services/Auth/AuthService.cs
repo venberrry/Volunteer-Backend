@@ -195,27 +195,50 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Services
         public async Task<Volunteer> GetVolunteerProfileAsync(int volunteerCommonUserId)
         {
             var volunteer = await _context.Volunteers
+                .Include(v => v.CommonUser) // Загрузка связанных данных из таблицы CommonUser
                 .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId);
             if (volunteer == null)
             {
                 throw new Exception("Volunteer not found");
             }
 
-            // Возвращаем профиль волонтера
-            return volunteer;
+            // Возвращаем профиль волонтера с номером телефона
+            return new Volunteer
+            {
+                Id = volunteer.Id,
+                CommonUserId = volunteer.CommonUserId,
+                FirstName = volunteer.FirstName,
+                LastName = volunteer.LastName,
+                MiddleName = volunteer.MiddleName,
+                PhotoPath = volunteer.PhotoPath,
+                BirthDate = volunteer.BirthDate,
+                About = volunteer.About,
+                ParticipationCount = volunteer.ParticipationCount,
+                PhoneNumber = volunteer.CommonUser.PhoneNumber // Получение номера телефона из CommonUser
+            };
         }
         
         public async Task<Organization> GetOrganizationProfileAsync(int organizationCommonUserId)
         {
             var organization = await _context.Organizations
+                .Include(o => o.CommonUser)
                 .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
             if (organization == null)
             {
                 throw new Exception("Organization not found");
             }
             
-            // Возвращаем профиль организации
-            return organization;
+            return new Organization
+            {
+                Id = organization.Id,
+                CommonUserId = organization.CommonUserId,
+                Name = organization.Name,
+                PhotoPath = organization.PhotoPath,
+                LegalAddress = organization.LegalAddress,
+                Website = organization.Website,
+                WorkingHours = organization.WorkingHours,
+                PhoneNumber = organization.CommonUser.PhoneNumber // Номер телефона теперь из сущности Organization
+            };
         }
     }
 }

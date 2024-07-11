@@ -101,7 +101,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             return BadRequest(ModelState);
         }
         
-        [HttpGet("voluteer-profile")]
+        [HttpGet("volunteer-profile")]
         public async Task<IActionResult> GetVolunteerProfile()
         {
             var volunteerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
