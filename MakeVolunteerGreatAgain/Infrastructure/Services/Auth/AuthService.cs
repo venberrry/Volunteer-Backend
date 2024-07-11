@@ -204,7 +204,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Services
             // Возвращаем профиль волонтера
             return volunteer;
         }
-        
+        //пусть так)
         public async Task<Organization> GetOrganizationProfileAsync(int organizationCommonUserId)
         {
             var organization = await _context.Organizations
