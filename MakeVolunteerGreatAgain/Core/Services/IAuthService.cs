@@ -10,5 +10,7 @@ public interface IAuthService
     Task<AuthResultDTO> LoginAsync(LoginDTO model);
     Task<UpdateVolunteerDTO> UpdateVolunteerAsync(UpdateVolunteerDTO model,int volunteerCommonUserId);
     Task<UpdateOrganizationDTO> UpdateOrganizationAsync(UpdateOrganizationDTO model, int organizationCommonUserId);
+    Task<Volunteer> GetVolunteerProfileAsync(int volunteerCommonUserId);
+    Task<Organization> GetOrganizationProfileAsync(int organizationCommonUserId);
 }
 

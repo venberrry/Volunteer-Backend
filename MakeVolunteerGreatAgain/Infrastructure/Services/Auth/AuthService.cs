@@ -191,5 +191,31 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Services
             await _context.SaveChangesAsync();
             return model;
         }
+        
+        public async Task<Volunteer> GetVolunteerProfileAsync(int volunteerCommonUserId)
+        {
+            var volunteer = await _context.Volunteers
+                .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId);
+            if (volunteer == null)
+            {
+                throw new Exception("Volunteer not found");
+            }
+
+            // Возвращаем профиль волонтера
+            return volunteer;
+        }
+        
+        public async Task<Organization> GetOrganizationProfileAsync(int organizationCommonUserId)
+        {
+            var organization = await _context.Organizations
+                .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
+            if (organization == null)
+            {
+                throw new Exception("Organization not found");
+            }
+            
+            // Возвращаем профиль организации
+            return organization;
+        }
     }
 }

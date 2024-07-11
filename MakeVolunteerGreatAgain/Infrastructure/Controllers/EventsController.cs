@@ -63,6 +63,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             {
                 Id = eventItem.Id,
                 OrganizationId = eventItem.OrganizationId,
+                OrganizationName = eventItem.Organization.Name,
                 Title = eventItem.Title,
                 PhotoPath = eventItem.PhotoPath,
                 StartDate = eventItem.StartDate,
