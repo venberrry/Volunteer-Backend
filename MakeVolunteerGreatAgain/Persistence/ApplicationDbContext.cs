@@ -72,11 +72,12 @@ namespace MakeVolunteerGreatAgain.Persistence
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Event -> Organization: Один ко многим
-            // Один Event принадлежит одной Organization
+            // Один Event принадлежит одной Organization по CommonUserId !!!!!!!!!!!!!!!!
             modelBuilder.Entity<Event>()
                 .HasOne(e => e.Organization)
                 .WithMany(o => o.Events)
                 .HasForeignKey(e => e.OrganizationId)
+                //.HasPrincipalKey(o => o.CommonUserId)  // !!!
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -105,7 +106,7 @@ namespace MakeVolunteerGreatAgain.Persistence
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Invitation -> Organization: Один к одному
-            // Один Invitation принадлежит одной Organization
+            // Один Invitation принадлежит одной Organization 
             modelBuilder.Entity<Invitation>()
                 .HasOne(i => i.Organization)
                 .WithMany()

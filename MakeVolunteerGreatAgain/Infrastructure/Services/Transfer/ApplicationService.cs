@@ -3,6 +3,7 @@ using MakeVolunteerGreatAgain.Persistence;
 using MakeVolunteerGreatAgain.Core.Entities;
 using MakeVolunteerGreatAgain.Core.Repositories.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace MakeVolunteerGreatAgain.Infrastructure.Services.Transfer; 
  
@@ -60,15 +61,58 @@ public class ApplicationService : IApplicationService
     }
 
 
-    public async Task<IEnumerable<Application>> GetApplicationsByEventIdAsync(int eventId)
+    public async Task<IEnumerable<Application>?> GetApplicationsByEventIdAsync(int eventId, int organizationCommonUserId)
     {
-         return await _context.Applications.Where(x => x.EventId == eventId).ToListAsync();
+        //Поиск организации в бд
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId) ?? throw new Exception("Organization not found");
+
+        //проверяем, не пытается ли какая-то левая организация запросить заявки на чужое мероприятие
+        if (_context.Applications.Where(a => a.EventId == eventId).Any(a => a.Event.OrganizationId != organization.Id))
+        {
+            return null; 
+        }
+
+        //Выводим только заявки с совпадающим EventId и чтобы принадлежали нашей организации, которая пытается запросить
+        var applicationsByEventId = _context.Applications
+        .Where(a => a.EventId == eventId && a.Event.OrganizationId == organization.Id);
+        
+        // Отложенная загрузка связанных объектов Volunteer и Event
+        //(потому что при проекции ef core автоматически не подгружает связанные объекты)
+        await applicationsByEventId
+            .Include(a => a.Volunteer)
+            .Include(a => a.Event)
+            .LoadAsync();
+
+        return applicationsByEventId;
     }
 
 
-    public async Task<IEnumerable<Application>> GetAcceptedApplicationsByEventIdAsync(int eventId)
+    public async Task<IEnumerable<Application>?> GetAcceptedApplicationsByEventIdAsync(int eventId,  int organizationCommonUserId)
     {
-        return await _context.Applications.Where(x => x.EventId == eventId && x.Status == ApplicationStatus.Accepted.ToString()).ToListAsync();
+        //Поиск организации в бд
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId) ?? throw new Exception("Organization not found");
+
+        //проверяем, не пытается ли какая-то левая организация запросить заявки на чужое мероприятие
+        if (_context.Applications.Where(a => a.EventId == eventId).Any(a => a.Event.OrganizationId != organization.Id))
+        {
+            return null; 
+        }
+
+        //Выводим только заявки с совпадающим EventId и чтобы принадлежали нашей организации, которая пытается запросить
+        //Со статусом одобрено
+         var acceptedApplicationsByEventId = _context.Applications
+        .Where(a => a.EventId == eventId && a.Event.OrganizationId == organization.Id && a.Status == ApplicationStatus.Accepted.ToString());
+
+        // Отложенная загрузка связанных объектов Volunteer и Event 
+        //(потому что при проекции ef core автоматически не подгружает связанные объекты)
+        await acceptedApplicationsByEventId
+            .Include(a => a.Volunteer)
+            .Include(a => a.Event)
+            .LoadAsync();
+
+        return acceptedApplicationsByEventId;
     }
 
 
