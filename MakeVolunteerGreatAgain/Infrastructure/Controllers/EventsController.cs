@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MakeVolunteerGreatAgain.Core.Entities;
 using MakeVolunteerGreatAgain.Core.Services;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using MakeVolunteerGreatAgain.Core.Repositories.DTO;
 
@@ -27,6 +28,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             
             var eventsToReturn = events.Select(e => new 
             {
+                Id = e.Id,
                 Title = e.Title,
                 PhotoPath = e.PhotoPath,
                 StartDate = e.StartDate,
@@ -57,20 +59,29 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             {
                 return NotFound();
             }
-            return Ok(eventItem);
+            var eventToReturn = new
+            {
+                Id = eventItem.Id,
+                OrganizationId = eventItem.OrganizationId,
+                OrganizationName = eventItem.Organization.Name,
+                Title = eventItem.Title,
+                PhotoPath = eventItem.PhotoPath,
+                StartDate = eventItem.StartDate,
+                EndDate = eventItem.EndDate,
+                City = eventItem.City,
+                Description = eventItem.Description
+            };
+            
+            return Ok(eventToReturn);
         }
-
-        // НУЖНО СДЕЛАТЬ
+        
         [Authorize(Roles = "Organization")]
         [HttpPut("UpdateEvent/{id:int}")]
-        public async Task<IActionResult> UpdateEvent(int id, Event updatedEvent)
+        public async Task<IActionResult> UpdateEvent([FromBody] UpdateEventDTO updatedEvent, int id)
         {
-            var eventItem = await _eventService.UpdateEventAsync(id, updatedEvent);
-            if (eventItem == null)
-            {
-                return NotFound();
-            }
-            return NoContent();
+            var eventItem = await _eventService.UpdateEventAsync(updatedEvent, id);
+
+            return Ok(eventItem);
         }
         
         //Можно добавить защиту от удаления под другими организациями

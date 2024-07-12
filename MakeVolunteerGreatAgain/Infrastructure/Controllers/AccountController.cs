@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Identity;
@@ -5,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using MakeVolunteerGreatAgain.Core.Services;
 using MakeVolunteerGreatAgain.Core.Repositories.DTO;
 using MakeVolunteerGreatAgain.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 {
@@ -98,5 +100,55 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
             return BadRequest(ModelState);
         }
+        
+        [HttpGet("volunteer-profile")]
+        public async Task<IActionResult> GetVolunteerProfile()
+        {
+            var volunteerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (volunteerId == null)
+            {
+                return Forbid();
+            }
+            var volunteer = await _authService.GetVolunteerProfileAsync(Convert.ToInt32(volunteerId));
+            return Ok(volunteer);
+        }
+        
+        [HttpGet("organization-profile")]
+        public async Task<IActionResult> GetOrganizationProfile()
+        {
+            var organizationId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (organizationId == null)
+            {
+                return Forbid();
+            }
+            var organization = await _authService.GetOrganizationProfileAsync(Convert.ToInt32(organizationId));
+            return Ok(organization);
+        }
+
+        [HttpPut("update-volunteer")]
+        public async Task<IActionResult> UpdateVolunteer([FromBody] UpdateVolunteerDTO model, int volunteerCommonUserId)
+        {
+            var volunteerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (volunteerId == null || Convert.ToInt32(volunteerId) != volunteerCommonUserId)
+            {
+                return Forbid();
+            }
+            var volunteer = await _authService.UpdateVolunteerAsync(model, volunteerCommonUserId);
+            return Ok(volunteer);
+        }
+        
+        [Authorize(Roles = "Organization")]
+        [HttpPut("update-organization")]
+        public async Task<IActionResult> UpdateOrganization([FromBody] UpdateOrganizationDTO model, int organizationCommonUserId)
+        {
+            var organizationId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (organizationId == null || Convert.ToInt32(organizationId) != organizationCommonUserId)
+            {
+                return Forbid();
+            }
+            var organization = await _authService.UpdateOrganizationAsync(model, organizationCommonUserId);
+            return Ok(organization);
+        }
+        
     }
 }
