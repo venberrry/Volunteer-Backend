@@ -34,7 +34,8 @@ public class EventService : IEventService
             City = eventModel.City,
             Description = eventModel.Description,
             OrganizationId = organization.CommonUserId, // Установка OrganizationId как идентификатор организации
-            Organization = organization
+            Organization = organization,
+            OrganizationName = organization.Name
         };
 
         _context.Events.Add(eventObj);
