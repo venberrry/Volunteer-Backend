@@ -9,5 +9,13 @@ namespace MakeVolunteerGreatAgain.Core.Entities
         public int VolunteerId { get; set; }
         public Volunteer Volunteer { get; set; } = new Volunteer();
         public Organization Organization { get; set; } = new Organization();
+        public string Status { get; set; } = InvitationStatus.Pending.ToString();
+
+    }
+    public enum InvitationStatus 
+    {
+        Pending,
+        Accepted,
+        Rejected
     }
 }

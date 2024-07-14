@@ -10,4 +10,5 @@ public interface IEventService
     Task<Event> CreateEventAsync(EventCreateDTO eventModel, int commonUserId);
     Task<UpdateEventDTO> UpdateEventAsync(UpdateEventDTO eventModel, int id);
     Task<bool> DeleteEventAsync(int id);
+   Task<IEnumerable<Event>> GetEventsForOrganizationAsync(int organizationCommonUserId);
 }

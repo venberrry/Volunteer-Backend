@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using MakeVolunteerGreatAgain.Core.DTOs;
 using MakeVolunteerGreatAgain.Core.Entities;
 using MakeVolunteerGreatAgain.Core.Services;
@@ -24,9 +23,12 @@ public class InvitationController : ControllerBase
     public async Task<IActionResult> CreateInvitation([FromBody] CreateInvitationDTO invitation)
     {
         var organizationId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         var volunteerId = invitation.VolunteerId;
+
         var createdInvitation = await _invitationService.CreateInvitationAsync(volunteerId, organizationId);
-        return Ok(createdInvitation);
+        
+        return Ok( new {Message = "Приглашение создано."});
     }
 
     [Authorize(Roles = "Organization")]
@@ -34,9 +36,36 @@ public class InvitationController : ControllerBase
     public async Task<IActionResult> GetAllInvitations()
     {
         var organizationId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         var invitations = await _invitationService.GetAllInvitationsAsync(organizationId);
-        return Ok(invitations);
+
+        var invitationsToReturn = invitations.Select(i => new
+        {
+            invitationId = i.Id,
+            volunteerName = i.Volunteer.FirstName + " " + i.Volunteer.LastName,
+            organizationName = i.Organization.Name,
+            status = i.Status
+        }).ToList();
+        return Ok(invitationsToReturn);
     }
+
+
+    //TODO: прикрутить отправку уведомления в профиль (или на почту)
+    [Authorize(Roles = "Volunteer")]
+    [HttpGet("GetAllInvitationsForVolunteer")]
+    public async Task<IActionResult> GetAllInvitationsForVolunteer()
+    {
+        var volunteerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var invitations = await _invitationService.GetAllInvitationsForVolunteerAsync(volunteerId);
+
+        var invitationsToReturn = invitations.Select(i => new 
+        {
+            organizationName = i.Organization.Name,
+            status = i.Status
+        }).ToList();
+        return Ok(invitationsToReturn);
+    }
+    
 
     [Authorize(Roles = "Organization")]
     [HttpGet("GetInvitationById/{id:int}")]
@@ -47,7 +76,6 @@ public class InvitationController : ControllerBase
         {
             return NotFound("Invitation not found.");
         }
-
         return Ok(invitation);
     }
 
@@ -61,7 +89,7 @@ public class InvitationController : ControllerBase
             return NotFound("Invitation not found.");
         }
 
-        return Ok(invitation);
+        return Ok(new { Message = "Invitation updated successfully." });
     }
 
     [Authorize(Roles = "Organization")]
@@ -74,6 +102,6 @@ public class InvitationController : ControllerBase
             return NotFound("Invitation not found.");
         }
 
-        return Ok(result);
+        return Ok(new { Message = "Invitation deleted successfully." });
     }
 }

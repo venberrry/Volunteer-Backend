@@ -9,4 +9,5 @@ public interface IInvitationService
     Task<Invitation?> DeleteInvitationAsync(int id);
     Task<IEnumerable<Invitation?>> GetAllInvitationsAsync(int organizationId);
     Task<Invitation?> GetInvitationByIdAsync(int id);
+    Task<IEnumerable<Invitation>> GetAllInvitationsForVolunteerAsync(int volunteerCommonUserId);
 }

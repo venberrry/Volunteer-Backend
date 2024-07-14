@@ -88,6 +88,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
             var applicationsToReturn = applicationsByEventId.Select(a => new 
             {
+                ApplicationId = a.Id,
                 EventTitle = a.Event.Title,
                 VolunteerName = a.Volunteer.FirstName + " " + a.Volunteer.LastName,
                 a.CoverLetter,
@@ -119,6 +120,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
             var applicationsToReturn = applicationsByEventId.Select(a => new 
             {
+                ApplicationId = a.Id,
                 EventTitle = a.Event.Title,
                 VolunteerName = a.Volunteer.FirstName + " " + a.Volunteer.LastName,
                 a.CoverLetter,
@@ -130,7 +132,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
 
         [Authorize(Roles = "Organization")]
-        [HttpPut("AcceptAplication/{id:int}")]
+        [HttpPut("AcceptApplication/{id:int}")]
         public async Task<IActionResult> AcceptAplication(int id)
         {
             var applicationToAccept = await _applicationService.AcceptAplicationAsync(id);
@@ -143,7 +145,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
 
         [Authorize(Roles = "Organization")]
-        [HttpPut("RejectAplication/{id:int}")]
+        [HttpPut("RejectApplication/{id:int}")]
         public async Task<IActionResult> RejectAplication(int id) 
         {
             var applicationToReject = await _applicationService.RejectAplicationAsync(id);

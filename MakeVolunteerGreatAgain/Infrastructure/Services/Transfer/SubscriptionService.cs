@@ -14,7 +14,7 @@ public class SubscriptionService : ISubscriptionService
         _context = context;
     }
 
-    public async Task<Subscription?> SubscribeAsync(int volunteerCommonUserId, int organizationCommonUserId)
+    public async Task<Subscription> SubscribeAsync(int volunteerCommonUserId, int organizationCommonUserId)
     {
         // Найти волонтера по CommonUserId
         var volunteer = await _context.Volunteers
@@ -38,7 +38,7 @@ public class SubscriptionService : ISubscriptionService
             // ОНО НЕ НАДО АРААРОАОАОАООАРАОААОАОА ПАМАГИТЕ ПАЖАЛАСТА XDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
             VolunteerId = volunteer.Id,
             OrganizationId = organization.Id,
-            Status = "Pending",
+            Status = SubscriptionStatus.Active.ToString(),
             Volunteer = volunteer,
             Organization = organization
         };
@@ -49,7 +49,7 @@ public class SubscriptionService : ISubscriptionService
         return subscription;
     }
 
-    public async Task<Subscription> SubscribeByInvitationAsync(int invitationId, int volunteerId)
+    public async Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerId)
     {
         var invitation = await _context.Invitations.FindAsync(invitationId);
         
@@ -57,6 +57,10 @@ public class SubscriptionService : ISubscriptionService
         {
             return null;
         }
+
+        invitation.Status = InvitationStatus.Accepted.ToString();
+        _context.Invitations.Update(invitation);
+        await _context.SaveChangesAsync();
 
         return await SubscribeAsync(invitation.VolunteerId, invitation.OrganizationId);
     }
@@ -70,9 +74,13 @@ public class SubscriptionService : ISubscriptionService
             throw new Exception("Organization not found");
         }
 
-        return await _context.Subscriptions
-            .Where(s => s.OrganizationId == organization.Id)
-            .ToListAsync();
+        var subscriptions = _context.Subscriptions.Where(s => s.OrganizationId == organization.Id);
+        await subscriptions
+            .Include(s => s.Volunteer)
+            .Include(s => s.Organization)
+            .LoadAsync();
+
+        return subscriptions;
     }
     
     public async Task<IEnumerable<Subscription>> GetSubscriptionsByVolunteerAsync(int volunteerCommonUserId)
@@ -87,8 +95,13 @@ public class SubscriptionService : ISubscriptionService
         }
 
         // Получить подписки для найденного волонтера
-        return await _context.Subscriptions
-            .Where(s => s.VolunteerId == volunteer.Id)
-            .ToListAsync();
+        var subscriptionsForVolunteer = _context.Subscriptions.Where(s => s.VolunteerId == volunteer.Id);
+
+         await subscriptionsForVolunteer
+            .Include(s => s.Volunteer)
+            .Include(s => s.Organization)
+            .LoadAsync();
+
+        return subscriptionsForVolunteer;
     }
 }

@@ -21,7 +21,7 @@ public class InvitationService : IInvitationService
     }
 
     //Получение всех приглашений
-    public async Task<IEnumerable<Invitation>> GetAllInvitationsAsync(int organizationCommonUserId)
+    public async Task<IEnumerable<Invitation?>> GetAllInvitationsAsync(int organizationCommonUserId)
     {
         var organization = await _context.Organizations
             .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
@@ -30,9 +30,13 @@ public class InvitationService : IInvitationService
             throw new Exception("Organization not found");
         }
 
-        return await _context.Invitations
-            .Where(s => s.OrganizationId == organization.Id)
-            .ToListAsync();
+        var invitations =  _context.Invitations.Where(s => s.OrganizationId == organization.Id);
+
+        await invitations
+            .Include(i => i.Volunteer)
+            .Include(i => i.Organization)
+            .LoadAsync();   
+        return invitations;   
     }
     
     // Создание нового приглашения
@@ -59,7 +63,8 @@ public class InvitationService : IInvitationService
             OrganizationId = organization.Id,
             Organization = organization,
             VolunteerId = volunteer.Id,
-            Volunteer = volunteer
+            Volunteer = volunteer,
+            Status = InvitationStatus.Pending.ToString()
         };
         await _context.Invitations.AddAsync(invitation);
         await _context.SaveChangesAsync();
@@ -94,5 +99,19 @@ public class InvitationService : IInvitationService
         _context.Invitations.Remove(invitation);
         await _context.SaveChangesAsync();
         return invitation;
+    }
+
+    public async Task<IEnumerable<Invitation>> GetAllInvitationsForVolunteerAsync(int volunteerCommonUserId)
+    {
+        var volunteer = await _context.Volunteers
+            .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId) ?? throw new Exception("Volunteer not found");
+        
+        var invitationsForVolunteer = _context.Invitations.Where(i => i.VolunteerId == volunteer.Id);
+        await invitationsForVolunteer
+            .Include(i => i.Volunteer)
+            .Include(i => i.Organization)
+            .LoadAsync();
+            
+        return invitationsForVolunteer;
     }
 }

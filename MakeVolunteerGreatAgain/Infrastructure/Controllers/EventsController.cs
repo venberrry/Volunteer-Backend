@@ -50,6 +50,27 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             return Ok(createEvent);
         }
 
+        [Authorize(Roles = "Organization")]
+        [HttpGet("MyEvents")]
+        public async Task<IActionResult> GetEventsForOrganization()
+        {
+            var organizationCommonUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            // Получаем мероприятия для организации по его CommonUserId
+            var events = await _eventService.GetEventsForOrganizationAsync(organizationCommonUserId);
+
+            var eventsToReturn = events.Select(s => new
+            {
+                s.Id,
+                s.Title,
+                s.City,
+                s.PhotoPath,
+                s.StartDate,
+                s.EndDate
+            }).ToList();
+            return Ok(eventsToReturn);
+        }
+
         
         [HttpGet("GetById/{id:int}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
@@ -57,7 +78,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             var eventItem = await _eventService.GetEventByIdAsync(id);
             if (eventItem == null)
             {
-                return NotFound();
+                return NotFound( new { Message = "Мероприятие не найдено" });
             }
             var eventToReturn = new
             {
@@ -81,7 +102,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         {
             var eventItem = await _eventService.UpdateEventAsync(updatedEvent, id);
 
-            return Ok(eventItem);
+            return Ok( new { Message = "Мероприятие успешно обновлено" });
         }
         
         //Можно добавить защиту от удаления под другими организациями
@@ -92,9 +113,9 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             var success = await _eventService.DeleteEventAsync(id);
             if (!success)
             {
-                return NotFound();
+                return NotFound( new { Message = "Мероприятие не найдено" });
             }
-            return NoContent();
+            return Ok( new { Message = "Мероприятие успешно удалено" });
         }
     }
 }

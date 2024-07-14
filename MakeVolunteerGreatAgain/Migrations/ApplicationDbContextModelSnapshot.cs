@@ -40,6 +40,7 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -171,6 +172,10 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<int>("VolunteerId")
                         .HasColumnType("integer");
 
@@ -280,7 +285,6 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PhotoPath")

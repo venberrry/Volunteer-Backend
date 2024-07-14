@@ -48,6 +48,7 @@ public class EventService : IEventService
         return await _context.Events.ToListAsync();
     }
 
+
     public async Task<Event?> GetEventByIdAsync(int id)
     {
         var eventItem = await _context.Events
@@ -55,7 +56,7 @@ public class EventService : IEventService
             .FirstOrDefaultAsync(e => e.Id == id);
         return eventItem;
     }
-
+ 
 
     public async Task<UpdateEventDTO> UpdateEventAsync(UpdateEventDTO updatedEvent, int id)
     {
@@ -87,5 +88,19 @@ public class EventService : IEventService
         _context.Events.Remove(eventToDelete);
         await _context.SaveChangesAsync();
         return true;
+    }
+
+
+    public async Task<IEnumerable<Event>> GetEventsForOrganizationAsync(int organizationCommonUserId)
+    {
+        //Поиск организации по CommonUserId
+         var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId) ?? throw new Exception("Organization not found");
+
+         //Выводим только мероприятия, принадлежащие нашей организации, которая пытается запросить
+        var events = await _context.Events
+            .Where(e => e.OrganizationId == organization.Id)
+            .ToListAsync();
+        return events;
     }
 }

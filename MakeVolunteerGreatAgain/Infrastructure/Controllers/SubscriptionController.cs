@@ -23,9 +23,10 @@ public class SubscriptionController : ControllerBase
     public async Task<IActionResult> Subscribe(int organizationId)
     {
         var volunteerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
         var subscription = await _subscriptionService.SubscribeAsync(volunteerId, organizationId);
 
-        return Ok(subscription);
+        return Ok(new { Message = "You have successfully subscribed." });
     }
 
     [Authorize(Roles = "Volunteer")]
@@ -37,13 +38,14 @@ public class SubscriptionController : ControllerBase
 
         if (subscription == null)
         {
-            return NotFound("Invitation not found or already accepted.");
+            return NotFound(new { Message = "Invitation not found or already accepted." });
         }
 
-        return Ok(subscription);
+        return Ok(new { Message = "You have successfully subscribed." });
     }
 
     // Выводит все подписки, а надо только конкретной организации!!!!
+    // Выводить тут надо подписчиков, я так понимаю??? 
     [Authorize(Roles = "Organization")]
     [HttpGet("GetSubscriptions")]
     public async Task<IActionResult> GetSubscriptions()
@@ -52,9 +54,13 @@ public class SubscriptionController : ControllerBase
 
         var subscriptions = await _subscriptionService.GetSubscriptionsAsync(organizationId);
 
-        var subscriptionIds = subscriptions.Select(s => s.VolunteerId).ToList();
-
-        return Ok(subscriptionIds);
+        var subscriptionsToReturn = subscriptions.Select(s => new
+        {
+            SubscriptionId = s.Id, //Получаем айдишник подписки
+            VolunteerName = s.Volunteer.FirstName + " " + s.Volunteer.LastName, //Получаем имя фвмилию волонтера
+            Status = s.Status //получаем статус подписки (активна или протухла)
+        }).ToList();
+        return Ok(subscriptionsToReturn);
     }
 
     [Authorize(Roles = "Volunteer")]
@@ -67,7 +73,12 @@ public class SubscriptionController : ControllerBase
         var subscriptions = await _subscriptionService.GetSubscriptionsByVolunteerAsync(volunteerCommonUserId);
 
         // Извлекаем названия организаций, на которые подписан волонтер
-        var organizationNames = subscriptions.Select(s => s.OrganizationId).ToList();
+        var organizationNames = subscriptions.Select(s => new 
+        {
+            SubscriptionId = s.Id, //Получаем айдишник подписки
+            OrganizationName = s.Organization.Name, //Получаем название организации
+            Status = s.Status //Получаем статус подписки (активна или протухла)
+        }).ToList();
 
         return Ok(organizationNames);
     }
