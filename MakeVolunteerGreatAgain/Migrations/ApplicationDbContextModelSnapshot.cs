@@ -95,7 +95,10 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("text");                    
+                        .HasColumnType("text");  
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");                  
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");

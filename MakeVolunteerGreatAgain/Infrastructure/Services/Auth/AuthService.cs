@@ -213,7 +213,8 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Services
                 PhotoPath = volunteer.PhotoPath,
                 BirthDate = volunteer.BirthDate,
                 About = volunteer.About,
-                ParticipationCount = volunteer.ParticipationCount                
+                ParticipationCount = volunteer.ParticipationCount,     
+                PhoneNumber = volunteer.CommonUser.PhoneNumber // Получение номера телефона из CommonUser           
             };
         }
         
@@ -235,7 +236,8 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Services
                 PhotoPath = organization.PhotoPath,
                 LegalAddress = organization.LegalAddress,
                 Website = organization.Website,
-                WorkingHours = organization.WorkingHours                
+                WorkingHours = organization.WorkingHours,
+                PhoneNumber = organization.CommonUser.PhoneNumber // Номер телефона теперь из сущности Organization                
             };
         }
     }
