@@ -124,6 +124,33 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             var organization = await _authService.GetOrganizationProfileAsync(Convert.ToInt32(organizationId));
             return Ok(organization);
         }
+        
+        // Новый метод для получения профиля волонтера по идентификатору без авторизации
+        [HttpGet("volunteer-profile/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetVolunteerProfileById(int id)
+        {
+            var volunteer = await _authService.GetVolunteerProfileAsync(id);
+            if (volunteer == null)
+            {
+                return NotFound();
+            }
+            return Ok(volunteer);
+        }
+
+        // Новый метод для получения профиля организации по идентификатору без авторизации
+        [HttpGet("organization-profile/{id}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetOrganizationProfileById(int id)
+        {
+            var organization = await _authService.GetOrganizationProfileAsync(id);
+            if (organization == null)
+            {
+                return NotFound();
+            }
+            return Ok(organization);
+        }
+
 
         [HttpPut("update-volunteer")]
         public async Task<IActionResult> UpdateVolunteer([FromBody] UpdateVolunteerDTO model, int volunteerCommonUserId)

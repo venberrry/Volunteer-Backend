@@ -7,9 +7,9 @@ namespace MakeVolunteerGreatAgain.Core.Entities
         public int Id { get; set; }
         public int OrganizationId { get; set; }
         public int VolunteerId { get; set; }
+        public string Status { get; set; } = InvitationStatus.Pending.ToString();
         public Volunteer Volunteer { get; set; } = new Volunteer();
         public Organization Organization { get; set; } = new Organization();
-        public string Status { get; set; } = InvitationStatus.Pending.ToString();
 
     }
     public enum InvitationStatus 
