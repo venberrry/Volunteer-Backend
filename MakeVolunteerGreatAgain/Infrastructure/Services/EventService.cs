@@ -33,7 +33,7 @@ public class EventService : IEventService
             EndDate = eventModel.EndDate,
             City = eventModel.City,
             Description = eventModel.Description,
-            //OrganizationId = organization.Id, // Установка OrganizationId как идентификатор организации
+            OrganizationId = organization.CommonUserId, // Установка OrganizationId как идентификатор организации
             Organization = organization
         };
 
@@ -53,7 +53,19 @@ public class EventService : IEventService
     {
         var eventItem = await _context.Events
             .Include(e => e.Organization)
-            .FirstOrDefaultAsync(e => e.Id == id);
+            .Where(e => e.Id == id)
+            .Select(e => new Event
+            {
+                Id = e.Id,
+                OrganizationId = e.Organization.CommonUserId,
+                Title = e.Title,
+                PhotoPath = e.PhotoPath,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                City = e.City,
+                Description = e.Description
+            })
+            .FirstOrDefaultAsync();
         return eventItem;
     }
  
