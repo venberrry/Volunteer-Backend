@@ -58,16 +58,21 @@ public class EventService : IEventService
             {
                 Id = e.Id,
                 OrganizationId = e.Organization.CommonUserId,
+                OrganizationName = e.Organization.Name,
                 Title = e.Title,
                 PhotoPath = e.PhotoPath,
                 StartDate = e.StartDate,
                 EndDate = e.EndDate,
                 City = e.City,
-                Description = e.Description
+                Description = e.Description,
+                Organization = e.Organization,
+                Applications = e.Applications
             })
             .FirstOrDefaultAsync();
+
         return eventItem;
     }
+
  
 
     public async Task<UpdateEventDTO> UpdateEventAsync(UpdateEventDTO updatedEvent, int id)

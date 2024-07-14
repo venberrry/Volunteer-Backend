@@ -10,6 +10,7 @@ namespace MakeVolunteerGreatAgain.Core.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string? City { get; set; }
+        public string? OrganizationName { get; set; }
         public string? Description { get; set; }
         public Organization Organization { get; set; } = new Organization();
         public ICollection<Application>? Applications { get; set; } = new List<Application>();

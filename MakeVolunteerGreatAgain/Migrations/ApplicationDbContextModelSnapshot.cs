@@ -145,6 +145,9 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("OrganizationName")
+                        .HasColumnType("text");
+
                     b.Property<string>("PhotoPath")
                         .HasColumnType("text");
 
