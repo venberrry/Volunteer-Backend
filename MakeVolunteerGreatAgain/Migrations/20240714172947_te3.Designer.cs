@@ -3,6 +3,7 @@ using System;
 using MakeVolunteerGreatAgain.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MakeVolunteerGreatAgain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240714172947_te3")]
+    partial class te3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,11 +145,8 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("OrganizationId")
+                    b.Property<int>("OrganizationCommunUserId")
                         .HasColumnType("integer");
-
-                    b.Property<string>("OrganizationName")
-                        .HasColumnType("text");
 
                     b.Property<string>("PhotoPath")
                         .HasColumnType("text");
@@ -159,7 +159,7 @@ namespace MakeVolunteerGreatAgain.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrganizationId");
+                    b.HasIndex("OrganizationCommunUserId");
 
                     b.ToTable("Events");
                 });
@@ -449,7 +449,7 @@ namespace MakeVolunteerGreatAgain.Migrations
                 {
                     b.HasOne("MakeVolunteerGreatAgain.Core.Entities.Organization", "Organization")
                         .WithMany("Events")
-                        .HasForeignKey("OrganizationId")
+                        .HasForeignKey("OrganizationCommunUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

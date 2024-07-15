@@ -1,5 +1,4 @@
-﻿version: "3.9"
-
+﻿version: '3.3'
 services:
   db:
     image: postgres:latest
@@ -20,7 +19,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=GreatVolunteer;Username=postgres;Password=123FDAS4aswd
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=123    # Пароль ставим свой 
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=password    # Пароль ставим свой 
     depends_on:
       - db
     ports:

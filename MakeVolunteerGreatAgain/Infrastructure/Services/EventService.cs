@@ -33,8 +33,9 @@ public class EventService : IEventService
             EndDate = eventModel.EndDate,
             City = eventModel.City,
             Description = eventModel.Description,
-            //OrganizationId = organization.Id, // Установка OrganizationId как идентификатор организации
-            Organization = organization
+            OrganizationId = organization.CommonUserId, // Установка OrganizationId как идентификатор организации
+            Organization = organization,
+            OrganizationName = organization.Name
         };
 
         _context.Events.Add(eventObj);
@@ -53,9 +54,26 @@ public class EventService : IEventService
     {
         var eventItem = await _context.Events
             .Include(e => e.Organization)
-            .FirstOrDefaultAsync(e => e.Id == id);
+            .Where(e => e.Id == id)
+            .Select(e => new Event
+            {
+                Id = e.Id,
+                OrganizationId = e.Organization.CommonUserId,
+                OrganizationName = e.Organization.Name,
+                Title = e.Title,
+                PhotoPath = e.PhotoPath,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                City = e.City,
+                Description = e.Description,
+                Organization = e.Organization,
+                Applications = e.Applications
+            })
+            .FirstOrDefaultAsync();
+
         return eventItem;
     }
+
  
 
     public async Task<UpdateEventDTO> UpdateEventAsync(UpdateEventDTO updatedEvent, int id)

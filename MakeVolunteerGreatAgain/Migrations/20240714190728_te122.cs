@@ -5,7 +5,7 @@
 namespace MakeVolunteerGreatAgain.Migrations
 {
     /// <inheritdoc />
-    public partial class migration4 : Migration
+    public partial class te122 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

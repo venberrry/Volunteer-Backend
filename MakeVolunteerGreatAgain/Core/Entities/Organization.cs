@@ -6,7 +6,6 @@ namespace MakeVolunteerGreatAgain.Core.Entities
         public int Id { get; set; }
         public int CommonUserId { get; set; }
         public string? Name { get; set; }
-        public string? PhoneNumber { get; set; }
         public string? PhotoPath { get; set; }
         public string? LegalAddress { get; set; }
         public string? Website { get; set; }

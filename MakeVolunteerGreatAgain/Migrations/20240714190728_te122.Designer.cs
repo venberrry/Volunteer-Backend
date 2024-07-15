@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MakeVolunteerGreatAgain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240714011102_migration4")]
-    partial class migration4
+    [Migration("20240714190728_te122")]
+    partial class te122
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -148,6 +148,9 @@ namespace MakeVolunteerGreatAgain.Migrations
                     b.Property<int>("OrganizationId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("OrganizationName")
+                        .HasColumnType("text");
+
                     b.Property<string>("PhotoPath")
                         .HasColumnType("text");
 
@@ -206,9 +209,6 @@ namespace MakeVolunteerGreatAgain.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
                         .HasColumnType("text");
 
                     b.Property<string>("PhotoPath")
@@ -286,9 +286,6 @@ namespace MakeVolunteerGreatAgain.Migrations
 
                     b.Property<int?>("ParticipationCount")
                         .HasColumnType("integer");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
 
                     b.Property<string>("PhotoPath")
                         .HasColumnType("text");
