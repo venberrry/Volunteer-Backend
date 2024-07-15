@@ -2,11 +2,13 @@
 using MakeVolunteerGreatAgain.Core.Repositories;
 using MakeVolunteerGreatAgain.Core.Services;
 using MakeVolunteerGreatAgain.Infrastructure.Services;
+using MakeVolunteerGreatAgain.Infrastructure.Services.Redis;
 using MakeVolunteerGreatAgain.Infrastructure.Services.Token;
 using MakeVolunteerGreatAgain.Infrastructure.Services.Transfer;
 using MakeVolunteerGreatAgain.Persistence;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace MakeVolunteerGreatAgain.Web.Helpers;
 
@@ -47,5 +49,20 @@ public static class StartupHelpers
         builder.Services.AddScoped<IInvitationService, InvitationService>();
         builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
         builder.Services.AddScoped<IApplicationService, ApplicationService>();
+
+
+        // Регистрация Redis
+        var redisConfiguration = builder.Configuration.GetSection("Redis:Configuration").Value;
+        var redisInstanceName = builder.Configuration.GetSection("Redis:InstanceName").Value;
+        var multiplexer = ConnectionMultiplexer.Connect(redisConfiguration);
+
+        builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisConfiguration;
+            options.InstanceName = redisInstanceName;
+        });
+
+        builder.Services.AddScoped<ICacheService, RedisCacheService>();
     }
 }

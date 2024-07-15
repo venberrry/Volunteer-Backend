@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using MakeVolunteerGreatAgain.Core.Repositories.DTO;
+using MakeVolunteerGreatAgain.Infrastructure.Services.Redis;
 
 namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 {
@@ -15,18 +16,41 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
     public class EventsController : ControllerBase
     {
         private readonly IEventService _eventService;
+        private readonly ICacheService _cacheService;
 
-        public EventsController(IEventService eventService)
+        private const string AllEventsCacheKey = "AllEvents";
+        private const string OrganizationEventsCacheKeyPrefix = "OrganizationEvents_";
+
+
+
+        public EventsController(IEventService eventService, ICacheService cacheService)
         {
             _eventService = eventService;
+            _cacheService = cacheService;
         }
 
         [HttpGet("GetAllEvents")]
         public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
         {
+            var cachedEvents = await _cacheService.GetCacheValueAsync<List<Event>>(AllEventsCacheKey);
+            if (cachedEvents != null)
+            {
+                return Ok(cachedEvents.Select(e => new
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    PhotoPath = e.PhotoPath,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    City = e.City,
+                    OrganizationId = e.OrganizationId
+                }).ToList());
+            }
+
             var events = await _eventService.GetAllEventsAsync();
-            
-            var eventsToReturn = events.Select(e => new 
+            await _cacheService.SetCacheValueAsync(AllEventsCacheKey, events, TimeSpan.FromMinutes(30));
+
+            var eventsToReturn = events.Select(e => new
             {
                 Id = e.Id,
                 Title = e.Title,
@@ -55,9 +79,26 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         public async Task<IActionResult> GetEventsForOrganization()
         {
             var organizationCommonUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var cacheKey = $"{OrganizationEventsCacheKeyPrefix}{organizationCommonUserId}";
 
-            // Получаем мероприятия для организации по его CommonUserId
+            var cachedEvents = await _cacheService.GetCacheValueAsync<List<Event>>(cacheKey);
+            if (cachedEvents != null)
+            {
+                var cachedEventsToReturn = cachedEvents.Select(s => new
+                {
+                    s.Id,
+                    s.Title,
+                    s.City,
+                    s.PhotoPath,
+                    s.StartDate,
+                    s.EndDate
+                }).ToList();
+                return Ok(cachedEventsToReturn);
+            }
+
             var events = await _eventService.GetEventsForOrganizationAsync(organizationCommonUserId);
+
+            await _cacheService.SetCacheValueAsync(cacheKey, events, TimeSpan.FromMinutes(30));
 
             var eventsToReturn = events.Select(s => new
             {
@@ -71,15 +112,34 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             return Ok(eventsToReturn);
         }
 
-        
         [HttpGet("GetById/{id:int}")]
         public async Task<ActionResult<Event>> GetEventById(int id)
         {
+            var cacheKey = $"Event_{id}";
+            var cachedEvent = await _cacheService.GetCacheValueAsync<Event>(cacheKey);
+            if (cachedEvent != null)
+            {
+                var cachedEventToReturn = new
+                {
+                    Id = cachedEvent.Id,
+                    OrganizationId = cachedEvent.OrganizationId,
+                    OrganizationName = cachedEvent.Organization.Name,
+                    Title = cachedEvent.Title,
+                    PhotoPath = cachedEvent.PhotoPath,
+                    StartDate = cachedEvent.StartDate,
+                    EndDate = cachedEvent.EndDate,
+                    City = cachedEvent.City,
+                    Description = cachedEvent.Description
+                };
+                return Ok(cachedEventToReturn);
+            }
+
             var eventItem = await _eventService.GetEventByIdAsync(id);
             if (eventItem == null)
             {
-                return NotFound( new { Message = "Мероприятие не найдено" });
+                return NotFound(new { Message = "Мероприятие не найдено" });
             }
+
             var eventToReturn = new
             {
                 Id = eventItem.Id,
@@ -92,20 +152,26 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
                 City = eventItem.City,
                 Description = eventItem.Description
             };
-            
+
+            await _cacheService.SetCacheValueAsync(cacheKey, eventItem, TimeSpan.FromMinutes(30));
+
             return Ok(eventToReturn);
         }
-        
+
         [Authorize(Roles = "Organization")]
         [HttpPut("UpdateEvent/{id:int}")]
         public async Task<IActionResult> UpdateEvent([FromBody] UpdateEventDTO updatedEvent, int id)
         {
-            var eventItem = await _eventService.UpdateEventAsync(updatedEvent, id);
+            await _eventService.UpdateEventAsync(updatedEvent, id);
 
-            return Ok( new { Message = "Мероприятие успешно обновлено" });
+            // Предотвратить неконсистентность данных (т.к. объект возможно в списке)
+            await _cacheService.RemoveCacheValueAsync(AllEventsCacheKey);
+
+            await _cacheService.RemoveCacheValueAsync($"Event_{id}");
+
+            return Ok(new { Message = "Мероприятие успешно обновлено" });
         }
-        
-        //Можно добавить защиту от удаления под другими организациями
+
         [Authorize(Roles = "Organization")]
         [HttpDelete("Delete/{id:int}")]
         public async Task<IActionResult> DeleteEvent(int id)
@@ -113,9 +179,14 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             var success = await _eventService.DeleteEventAsync(id);
             if (!success)
             {
-                return NotFound( new { Message = "Мероприятие не найдено" });
+                return NotFound(new { Message = "Мероприятие не найдено" });
             }
-            return Ok( new { Message = "Мероприятие успешно удалено" });
+
+            // Предотвратить неконсистентность данных (т.к. объект возможно в списке)
+            await _cacheService.RemoveCacheValueAsync(AllEventsCacheKey);
+            await _cacheService.RemoveCacheValueAsync($"Event_{id}");
+
+            return Ok(new { Message = "Мероприятие успешно удалено" });
         }
     }
 }
