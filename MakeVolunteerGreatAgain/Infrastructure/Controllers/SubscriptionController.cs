@@ -33,8 +33,9 @@ public class SubscriptionController : ControllerBase
     [HttpPost("AcceptInvitation/{invitationId:int}")]
     public async Task<IActionResult> SubscribeByInvitation(int invitationId)
     {
-        var volunteerId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-        var subscription = await _subscriptionService.SubscribeByInvitationAsync(invitationId, volunteerId);
+        var volunteerCommonUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        var subscription = await _subscriptionService.SubscribeByInvitationAsync(invitationId, volunteerCommonUserId);
 
         if (subscription == null)
         {

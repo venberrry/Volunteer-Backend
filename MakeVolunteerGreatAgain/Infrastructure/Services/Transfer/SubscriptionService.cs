@@ -49,11 +49,15 @@ public class SubscriptionService : ISubscriptionService
         return subscription;
     }
 
-    public async Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerId)
+    public async Task<Subscription?> SubscribeByInvitationAsync(int invitationId, int volunteerCommonUserId)
     {
         var invitation = await _context.Invitations.FindAsync(invitationId);
-        
-        if (invitation == null || invitation.VolunteerId != volunteerId)
+
+         // Найти волонтера по CommonUserId
+        var volunteer = await _context.Volunteers
+            .FirstOrDefaultAsync(v => v.CommonUserId == volunteerCommonUserId) ?? throw new Exception("Volunteer not found");
+            
+        if (invitation == null || invitation.VolunteerId != volunteer.Id)
         {
             return null;
         }
