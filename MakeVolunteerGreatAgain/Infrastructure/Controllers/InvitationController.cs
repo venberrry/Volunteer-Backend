@@ -60,6 +60,7 @@ public class InvitationController : ControllerBase
 
         var invitationsToReturn = invitations.Select(i => new 
         {
+            invitationId = i.Id,
             organizationName = i.Organization.Name,
             status = i.Status
         }).ToList();
