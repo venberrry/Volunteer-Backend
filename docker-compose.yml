@@ -20,11 +20,18 @@ services:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=GreatVolunteer;Username=postgres;Password=123FDAS4aswd
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localhost.pfx
       - ASPNETCORE_Kestrel__Certificates__Default__Password=password    # Пароль ставим свой 
+      - Redis__Configuration=redis:6379
     depends_on:
       - db
+      - redis
     ports:
       - "8443:443" # Для HTTPS
       - "8080:80"  # Для HTTP
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
 
 volumes:
   pgdata:
