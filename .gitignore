@@ -5,3 +5,9 @@ MakeVolunteerGreatAgain/bin/
 .github
 MakeVolunteerGreatAgain/bin/Debug/net8.0/MakeVolunteerGreatAgain.exe
 MakeVolunteerGreatAgain/bin/Debug/net8.0/MakeVolunteerGreatAgain.dll
+MakeVolunteerGreatAgain/bin/Debug/net8.0/MakeVolunteerGreatAgain.staticwebassets.runtime.json
+MakeVolunteerGreatAgain/obj/Debug/net8.0/staticwebassets.development.json
+MakeVolunteerGreatAgain/obj/Debug/net8.0/staticwebassets.pack.json
+MakeVolunteerGreatAgain/Web/appsettings.json
+MakeVolunteerGreatAgain/bin/Debug/net8.0/MakeVolunteerGreatAgain.dll
+MakeVolunteerGreatAgain/bin/Debug/net8.0/MakeVolunteerGreatAgain.exe
