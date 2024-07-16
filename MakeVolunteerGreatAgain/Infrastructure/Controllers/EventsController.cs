@@ -30,8 +30,13 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         }
 
         [HttpGet("GetAllEvents")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
+        public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
+            if (page <= 0 || pageSize <= 0)
+            {
+                return BadRequest("Page and pageSize must be positive integers.");
+            }
+
             var cachedEvents = await _cacheService.GetCacheValueAsync<List<Event>>(AllEventsCacheKey);
             if (cachedEvents != null)
             {
@@ -47,22 +52,34 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
                 }).ToList());
             }
 
-            var events = await _eventService.GetAllEventsAsync();
-            await _cacheService.SetCacheValueAsync(AllEventsCacheKey, events, TimeSpan.FromMinutes(30));
+            var totalEvents = await _eventService.GetAllEventsAsync();
+            
+            await _cacheService.SetCacheValueAsync(AllEventsCacheKey, totalEvents, TimeSpan.FromMinutes(30));
 
-            var eventsToReturn = events.Select(e => new
-            {
-                Id = e.Id,
-                Title = e.Title,
-                PhotoPath = e.PhotoPath,
-                StartDate = e.StartDate,
-                EndDate = e.EndDate,
-                City = e.City,
-                OrganizationId = e.OrganizationId
-            }).ToList();
+            var paginatedEvents = totalEvents
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(e => new
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    PhotoPath = e.PhotoPath,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    City = e.City,
+                    OrganizationId = e.OrganizationId
+                }).ToList();
+        
+            var totalPages = (int)Math.Ceiling(totalEvents.Count() / (double)pageSize);
 
-            return Ok(eventsToReturn);
+            Response.Headers.Append("X-Total-Count", totalEvents.Count().ToString()); // добавляем заголовок X-Total-Count в ответ 
+            Response.Headers.Append("X-Total-Pages", totalPages.ToString()); // для пагинации
+
+            return Ok(paginatedEvents);
         }
+
+
+
 
         [Authorize(Roles = "Organization")]
         [HttpPost("CreateEvent")]
