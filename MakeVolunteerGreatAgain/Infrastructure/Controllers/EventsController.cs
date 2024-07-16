@@ -99,7 +99,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             var cacheKey = $"{OrganizationEventsCacheKeyPrefix}{organizationCommonUserId}";
 
             var cachedEvents = await _cacheService.GetCacheValueAsync<List<Event>>(cacheKey);
-            if (cachedEvents != null)
+            if (cachedEvents != null && cachedEvents.Count > 0)
             {
                 var cachedEventsToReturn = cachedEvents.Select(s => new
                 {
@@ -114,20 +114,25 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
             }
 
             var events = await _eventService.GetEventsForOrganizationAsync(organizationCommonUserId);
-
-            await _cacheService.SetCacheValueAsync(cacheKey, events, TimeSpan.FromMinutes(30));
-
-            var eventsToReturn = events.Select(s => new
+            
+            var eventsToCache = events.Select(s => new
             {
                 s.Id,
                 s.Title,
                 s.City,
                 s.PhotoPath,
                 s.StartDate,
-                s.EndDate
+                s.EndDate,
+                s.Description,
+                OrganizationId = s.Organization.Id,
+                OrganizationName = s.Organization.Name
             }).ToList();
-            return Ok(eventsToReturn);
+
+            await _cacheService.SetCacheValueAsync(cacheKey, eventsToCache, TimeSpan.FromMinutes(30));
+            
+            return Ok(eventsToCache);
         }
+
 
         [HttpGet("GetById/{id:int}")]
         public async Task<ActionResult<Event>> GetEventById(int id)

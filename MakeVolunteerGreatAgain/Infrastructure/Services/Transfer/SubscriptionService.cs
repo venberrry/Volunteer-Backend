@@ -63,10 +63,16 @@ public class SubscriptionService : ISubscriptionService
         }
 
         invitation.Status = InvitationStatus.Accepted.ToString();
+        var invitations = _context.Invitations.Where(s => s.OrganizationId == invitation.OrganizationId);
+        await invitations
+            .Include(s => s.Volunteer)
+            .Include(s => s.Organization)
+            .LoadAsync();
+        
         _context.Invitations.Update(invitation);
         await _context.SaveChangesAsync();
 
-        return await SubscribeAsync(invitation.VolunteerId, invitation.OrganizationId);
+        return await SubscribeAsync(invitation.Volunteer.CommonUserId, invitation.Organization.CommonUserId);
     }
 
     public async Task<IEnumerable<Subscription>> GetSubscriptionsAsync(int organizationCommonUserId)
