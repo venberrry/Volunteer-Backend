@@ -22,22 +22,35 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         }
 
         [HttpGet("GetAllEvents")]
-        public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents()
+        public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var events = await _eventService.GetAllEventsAsync();
-            
-            var eventsToReturn = events.Select(e => new 
+             if (page <= 0 || pageSize <= 0)
             {
-                Id = e.Id,
-                Title = e.Title,
-                PhotoPath = e.PhotoPath,
-                StartDate = e.StartDate,
-                EndDate = e.EndDate,
-                City = e.City,
-                OrganizationId = e.OrganizationId
-            }).ToList();
+                return BadRequest("Page and pageSize must be positive integers.");
+            }
 
-            return Ok(eventsToReturn);
+            var totalEvents = await _eventService.GetAllEventsAsync();
+            var paginatedEvents = totalEvents
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(e => new 
+                {
+                    Id = e.Id,
+                    Title = e.Title,
+                    PhotoPath = e.PhotoPath,
+                    StartDate = e.StartDate,
+                    EndDate = e.EndDate,
+                    City = e.City,
+                    OrganizationId = e.OrganizationId
+                })
+                .ToList();
+
+            var totalPages = (int)Math.Ceiling(totalEvents.Count() / (double)pageSize);
+
+            Response.Headers.Append("X-Total-Count", totalEvents.Count().ToString()); // добавляем заголовок X-Total-Count в ответ 
+            Response.Headers.Append("X-Total-Pages", totalPages.ToString()); // для пагинации
+
+            return Ok(paginatedEvents);
         }
 
         [Authorize(Roles = "Organization")]
