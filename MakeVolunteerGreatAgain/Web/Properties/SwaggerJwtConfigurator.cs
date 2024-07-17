@@ -36,7 +36,7 @@ public static class SwaggerJwtConfigurator
             options.AddPolicy("AllowSpecificOrigin",
                 policyBuilder =>
                 {
-                    policyBuilder.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+                    policyBuilder.WithOrigins("http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:8080", "http://87.251.77.169/")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();

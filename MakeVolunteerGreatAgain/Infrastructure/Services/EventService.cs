@@ -76,12 +76,13 @@ public class EventService : IEventService
 
  
 
-    public async Task<UpdateEventDTO> UpdateEventAsync(UpdateEventDTO updatedEvent, int id)
+    public async Task<UpdateEventDTO?> UpdateEventAsync(UpdateEventDTO updatedEvent, int id, int organizationCommonUserId)
     {
-        var existingEvent = await _context.Events.FindAsync(id);
-        if (existingEvent == null)
+        var existingEvent = await _context.Events.FindAsync(id) ?? throw new Exception("Event not found");
+        
+        if (existingEvent.OrganizationId != organizationCommonUserId)
         {
-            return null;
+            return null; 
         }
 
         existingEvent.Title = updatedEvent.Title;
@@ -95,10 +96,15 @@ public class EventService : IEventService
         return updatedEvent;
     }
 
-    public async Task<bool> DeleteEventAsync(int id)
+
+    public async Task<bool> DeleteEventAsync(int id, int organizationCommonUserId)
     {
-        var eventToDelete = await _context.Events.FindAsync(id);
-        if (eventToDelete == null)
+        var organization = await _context.Organizations
+            .FirstOrDefaultAsync(o => o.CommonUserId == organizationCommonUserId);
+
+        var eventToDelete = await _context.Events.FindAsync(id) ?? throw new Exception("Event not found");
+
+        if (eventToDelete.OrganizationId != organization.Id)
         {
             return false;
         }
@@ -107,6 +113,7 @@ public class EventService : IEventService
         await _context.SaveChangesAsync();
         return true;
     }
+
 
 
     public async Task<IEnumerable<Event>> GetEventsForOrganizationAsync(int organizationCommonUserId)

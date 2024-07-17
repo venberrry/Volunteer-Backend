@@ -32,30 +32,28 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         [HttpGet("GetAllEvents")]
         public async Task<ActionResult<IEnumerable<Event>>> GetAllEvents([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
+            // var cachedEvents = await _cacheService.GetCacheValueAsync<List<Event>>(AllEventsCacheKey);
+            // if (cachedEvents != null)
+            // {
+            //     return Ok(cachedEvents.Select(e => new
+            //     {
+            //         Id = e.Id,
+            //         Title = e.Title,
+            //         PhotoPath = e.PhotoPath,
+            //         StartDate = e.StartDate,
+            //         EndDate = e.EndDate,
+            //         City = e.City,
+            //         OrganizationId = e.OrganizationId
+            //     }).ToList());
+            // }
+
             if (page <= 0 || pageSize <= 0)
             {
                 return BadRequest("Page and pageSize must be positive integers.");
             }
 
-            var cachedEvents = await _cacheService.GetCacheValueAsync<List<Event>>(AllEventsCacheKey);
-            if (cachedEvents != null)
-            {
-                return Ok(cachedEvents.Select(e => new
-                {
-                    Id = e.Id,
-                    Title = e.Title,
-                    PhotoPath = e.PhotoPath,
-                    StartDate = e.StartDate,
-                    EndDate = e.EndDate,
-                    City = e.City,
-                    OrganizationId = e.OrganizationId
-                }).ToList());
-            }
-
             var totalEvents = await _eventService.GetAllEventsAsync();
-            
-            await _cacheService.SetCacheValueAsync(AllEventsCacheKey, totalEvents, TimeSpan.FromMinutes(30));
-
+            //await _cacheService.SetCacheValueAsync(AllEventsCacheKey, events, TimeSpan.FromMinutes(30));
             var paginatedEvents = totalEvents
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -68,8 +66,9 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
                     EndDate = e.EndDate,
                     City = e.City,
                     OrganizationId = e.OrganizationId
-                }).ToList();
-        
+                })
+                .ToList();
+
             var totalPages = (int)Math.Ceiling(totalEvents.Count() / (double)pageSize);
 
             Response.Headers.Append("X-Total-Count", totalEvents.Count().ToString()); // добавляем заголовок X-Total-Count в ответ 
@@ -77,6 +76,7 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
             return Ok(paginatedEvents);
         }
+
 
 
 
@@ -184,24 +184,35 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
         [HttpPut("UpdateEvent/{id:int}")]
         public async Task<IActionResult> UpdateEvent([FromBody] UpdateEventDTO updatedEvent, int id)
         {
-            await _eventService.UpdateEventAsync(updatedEvent, id);
+            // Получение идентификатора текущего пользователя
+            var organizationCommonUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+            var newEvent = await _eventService.UpdateEventAsync(updatedEvent, id, organizationCommonUserId);
+            if (newEvent == null)
+            {
+                return StatusCode(403, new { Message = "У вас нет прав для редактирования этого мероприятия"});
+            }
 
             // Предотвратить неконсистентность данных (т.к. объект возможно в списке)
             await _cacheService.RemoveCacheValueAsync(AllEventsCacheKey);
-
             await _cacheService.RemoveCacheValueAsync($"Event_{id}");
 
             return Ok(new { Message = "Мероприятие успешно обновлено" });
         }
 
+
         [Authorize(Roles = "Organization")]
         [HttpDelete("Delete/{id:int}")]
         public async Task<IActionResult> DeleteEvent(int id)
         {
-            var success = await _eventService.DeleteEventAsync(id);
+            // Получение идентификатора текущего пользователя
+            var organizationCommonUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var success = await _eventService.DeleteEventAsync(id, organizationCommonUserId);
+
             if (!success)
             {
-                return NotFound(new { Message = "Мероприятие не найдено" });
+                return StatusCode(403, new { Message = "У вас нет прав для удаления этого мероприятия"});
             }
 
             // Предотвратить неконсистентность данных (т.к. объект возможно в списке)
@@ -210,5 +221,6 @@ namespace MakeVolunteerGreatAgain.Infrastructure.Controllers
 
             return Ok(new { Message = "Мероприятие успешно удалено" });
         }
+
     }
 }
